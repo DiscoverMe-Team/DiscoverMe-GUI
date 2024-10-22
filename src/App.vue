@@ -1,91 +1,85 @@
-<template>
-  <div id="app">
-    <AppHeader />
-    <main>
-      <section class="hero">
-        <h1>DiscoverMe</h1>
-        <p>Your journey to better mental health starts here.</p>
-        <button class="cta-button">Get Started</button>
-      </section>
-      <section class="mission">
-        <h2>Mission</h2>
-        <p>Track your mood and set goals to improve your mental well-being over time.</p>
-      </section>
-    </main>
-    <router-view />
-  </div>
-</template>
-
-<script>
-import AppHeader from './components/AppHeader.vue';
-
-export default {
-  name: 'App',
-  components: {
-    AppHeader
-  }
-};
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+import HelloWorld from './components/HelloWorld.vue'
 </script>
 
+<template>
+  <header>
+    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
+
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
+      </nav>
+    </div>
+  </header>
+
+  <RouterView />
+</template>
+
 <style scoped>
-/* Global Styles */
-#app {
-  font-family: 'Poppins', sans-serif; /* Modern, clean font */
-  color: #333;
-  margin: 0;
-  padding: 0;
+header {
+  line-height: 1.5;
+  max-height: 100vh;
 }
 
-/* Hero Section - Full-width with bold text */
-.hero {
-  background-color: #99d9f4; /* Light pastel background */
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+nav {
+  width: 100%;
+  font-size: 12px;
   text-align: center;
-  padding: 100px 20px;
-  color: #333;
+  margin-top: 2rem;
 }
 
-.hero h1 {
-  font-size: 4rem; /* Large, bold heading */
-  font-weight: bold;
+nav a.router-link-exact-active {
+  color: var(--color-text);
 }
 
-.hero p {
-  font-size: 1.5rem;
-  margin: 20px 0;
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
 }
 
-.cta-button {
-  background-color: black;
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  border-radius: 4px;
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
 }
 
-.cta-button:hover {
-  background-color: #333;
+nav a:first-of-type {
+  border: 0;
 }
 
-/* Mission Section */
-.mission {
-  text-align: center;
-  padding: 50px;
-  background-color: #f9f9f9; /* Light grey background */
-}
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
 
-.mission h2 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 20px;
-}
+  .logo {
+    margin: 0 2rem 0 0;
+  }
 
-.mission p {
-  font-size: 1.1rem;
-  color: #666;
-  max-width: 800px;
-  margin: 0 auto;
-  line-height: 1.6;
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
+
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
 }
 </style>
