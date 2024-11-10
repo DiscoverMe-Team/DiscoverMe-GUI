@@ -30,7 +30,7 @@ DiscoverMe aims to provide users with tools to monitor their mental health throu
 - Frontend: Vue.js, PrimeVue
 - Backend: Django (DiscoverMe-API repository)
 - Hosting: AWS EC2, RDS, Cognito
-- Dependencies: Axios, Vue Router, Vuex
+- Dependencies: Axios, Vue Router, Vuetify
 
 ## Installation
 
@@ -49,10 +49,10 @@ To set up the frontend locally, follow these steps:
 
 3. Start the development server:
    ```bash
-   npm run serve
+   npm run dev
    ```
 
-The application will be available at `http://localhost:8080`.
+The application will be available at `http://localhost:5173`.
 
 ## Usage
 
@@ -68,10 +68,10 @@ DiscoverMe-GUI/
 ├── src/
 │   ├── assets/
 │   ├── components/
-│   ├── layouts/
+│   ├── layout/
+|   ├── router/
+|   ├── service/
 │   ├── views/
-│   ├── router/
-│   └── store/
 ├── package.json
 ├── vue.config.js
 └── README.md
@@ -80,10 +80,11 @@ DiscoverMe-GUI/
 - **public/**: Static assets and index.html.
 - **src/assets/**: Images and stylesheets.
 - **src/components/**: Reusable Vue components.
-- **src/layouts/**: Layout components like Navbar and Sidebar.
-- **src/views/**: Application pages (Dashboard, MoodLog, Journal).
+- **src/layout/**: Layout components like Navbar and Sidebar.
 - **src/router/**: Vue Router configuration.
-- **src/store/**: Vuex store for state management.
+- **src/service/**: Includes the api service
+- **src/views/**: Application pages (Dashboard, MoodLog, Journal).
+
 
 ## Contributing
 
