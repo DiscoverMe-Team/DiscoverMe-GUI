@@ -1,8 +1,8 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
+import { register } from '@/services/backend/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { register } from '@/services/backend/api';
 
 const username = ref('');
 const email = ref('');
@@ -33,7 +33,7 @@ const handleSignUp = async () => {
 
         // Redirect to the login page after successful registration
         setTimeout(() => {
-            router.push('/');
+            router.push('/auth/login');
         }, 2000);
     } catch (error) {
         // Display an error message if registration fails
@@ -56,44 +56,16 @@ const handleSignUp = async () => {
 
                     <div>
                         <label for="username1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Username</label>
-                        <InputText
-                            id="username1"
-                            type="text"
-                            placeholder="Username"
-                            class="w-full md:w-[30rem] mb-8"
-                            v-model="username"
-                        />
+                        <InputText id="username1" type="text" placeholder="Username" class="w-full md:w-[30rem] mb-8" v-model="username" />
 
                         <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                        <InputText
-                            id="email1"
-                            type="email"
-                            placeholder="Email address"
-                            class="w-full md:w-[30rem] mb-8"
-                            v-model="email"
-                        />
+                        <InputText id="email1" type="email" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" />
 
                         <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                        <Password
-                            id="password1"
-                            v-model="password"
-                            placeholder="Password"
-                            :toggleMask="true"
-                            class="mb-4"
-                            fluid
-                            :feedback="false"
-                        ></Password>
+                        <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                         <label for="confirmPassword1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Confirm Password</label>
-                        <Password
-                            id="confirmPassword1"
-                            v-model="confirmPassword"
-                            placeholder="Confirm Password"
-                            :toggleMask="true"
-                            class="mb-4"
-                            fluid
-                            :feedback="false"
-                        ></Password>
+                        <Password id="confirmPassword1" v-model="confirmPassword" placeholder="Confirm Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                         <Button label="Sign Up" class="w-full" @click="handleSignUp"></Button>
                         <p v-if="errorMessage" class="text-red-500 mt-4">{{ errorMessage }}</p>
