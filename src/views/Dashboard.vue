@@ -1,25 +1,60 @@
 <script setup>
-import { useLayout } from '@/layout/composables/layout';
-import { ProductService } from '@/service/ProductService';
-import { onMounted, ref, watch } from 'vue';
+//import { useLayout } from '@/layout/composables/layout';
+//import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
+import { getMoods } from '@/services/backend/MoodService';
+import { getMoodLogs } from '@/services/backend/MoodLogService';
+import { getJournalEntries } from '@/services/backend/JournalEntryService';
+import { getGoals } from '@/services/backend/GoalService';
+import { getInsights } from '@/services/backend/InsightService';
+//const { getPrimary, getSurface, isDarkTheme } = useLayout();
 
-const { getPrimary, getSurface, isDarkTheme } = useLayout();
-
-const products = ref(null);
-const chartData = ref(null);
-const chartOptions = ref(null);
-
+//const products = ref(null);
+//const chartData = ref(null);
+//const chartOptions = ref(null);
+const moods = ref([]);
+const moodLogs = ref([]);
+const journalEntries = ref([]);
+const goals = ref([]);
+const insights = ref([]);
+const errorMessage = ref('');
+/*
 const items = ref([
     { label: 'Add New', icon: 'pi pi-fw pi-plus' },
     { label: 'Remove', icon: 'pi pi-fw pi-trash' }
 ]);
-
-onMounted(() => {
-    ProductService.getProductsSmall().then((data) => (products.value = data));
-    chartData.value = setChartData();
-    chartOptions.value = setChartOptions();
+*/
+onMounted( async () => {
+    //chartData.value = setChartData();
+   //chartOptions.value = setChartOptions();
+    try {
+        await fetchDashboardData();
+    } catch (error) {
+        errorMessage.value = 'Failed to load dashboard data.';
+        console.error('Dashboard Error:', error);
+    }
 });
+async function fetchDashboardData() {
+    try {
+        const [moodsResponse, moodLogsResponse, journalEntriesResponse, goalsResponse, insightsResponse] = await Promise.all([
+            getMoods(),
+            getMoodLogs(),
+            getJournalEntries(),
+            getGoals(),
+            getInsights()
+        ]);
 
+        moods.value = moodsResponse;
+        moodLogs.value = moodLogsResponse;
+        journalEntries.value = journalEntriesResponse;
+        goals.value = goalsResponse;
+        insights.value = insightsResponse;
+    } catch (error) {
+        errorMessage.value = 'Error fetching data. Please try again later.';
+        console.error('Data Fetch Error:', error);
+    }
+}
+/*
 function setChartData() {
     const documentStyle = getComputedStyle(document.documentElement);
 
@@ -89,17 +124,88 @@ function setChartOptions() {
         }
     };
 }
-
+    */
+/*
 const formatCurrency = (value) => {
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 };
+*/
 
+/*
 watch([getPrimary, getSurface, isDarkTheme], () => {
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
 });
+*/
 </script>
+<template>
+    <div class="grid grid-cols-12 gap-8">
+        <div v-if="errorMessage" class="col-span-12 text-red-500 text-center">
+            {{ errorMessage }}
+        </div>
 
+        <!-- Mood Summary -->
+        <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card mb-0">
+                <div class="text-center mb-4">
+                    <h3>Current Mood</h3>
+                    <div v-if="moods.length" class="text-xl">{{ moods[0].mood_type }}</div>
+                    <div v-else>No mood data available</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Mood Logs -->
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card">
+                <h3 class="mb-4">Recent Mood Logs</h3>
+                <ul>
+                    <li v-for="log in moodLogs.slice(0, 5)" :key="log.id">
+                        <strong>{{ log.date_logged }}</strong> - {{ log.mood.mood_type }}: {{ log.notes || 'No notes' }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Recent Journal Entries -->
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card">
+                <h3 class="mb-4">Recent Journal Entries</h3>
+                <ul>
+                    <li v-for="entry in journalEntries.slice(0, 3)" :key="entry.id">
+                        <strong>{{ entry.title }}</strong>: {{ entry.content.substring(0, 100) }}...
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Active Goals -->
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card">
+                <h3 class="mb-4">Active Goals</h3>
+                <ul>
+                    <li v-for="goal in goals.filter(goal => !goal.completed)" :key="goal.id">
+                        {{ goal.title }} - {{ goal.description }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card">
+                <h3 class="mb-4">Mood Insights</h3>
+                <ul>
+                    <li v-for="insight in insights.slice(0, 3)" :key="insight.id">
+                        {{ insight.trigger_word }} trends: {{ insight.mood_count }} occurrences in the last {{ insight.time_quantity }} {{ insight.time_frame }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--
 <template>
     <div class="grid grid-cols-12 gap-8">
         <div class="col-span-12 lg:col-span-6 xl:col-span-3">
@@ -342,3 +448,4 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
         </div>
     </div>
 </template>
+-->
