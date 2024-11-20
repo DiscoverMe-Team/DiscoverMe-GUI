@@ -1,12 +1,12 @@
 <template>
   <div class="app">
     <div class="content">
-       <!-- Back Button -->
+       <!-- Back Button Code -->
       <button class="back-button" @click="navigateToDashboard">Back to Dashboard</button>
 
       <h1>Goal Checklist</h1>
 
-      <!-- Input for Adding Goals -->
+      <!-- Goal Checklist Box -->
       <div class="add-goal-container">
         <input 
           type="text" 
@@ -16,17 +16,17 @@
         <button @click="addGoal">Add Goal</button>
       </div>
   
-      <!-- Warning Message -->
+      <!-- Warning Message - displayed when user tries to submit a goal with no text in the box -->
       <p v-if="showWarning" class="warning-message">
           You must enter a goal before you can add.
       </p>
 
-      <!-- Message if No Goals Exist -->
+      <!-- Message if No Goals Exist - this only displays while the goal list is empty -->
       <div v-if="goals.length === 0">
         <p>No goals to display yet!</p>
       </div>
 
-      <!-- Goals with Checklists -->
+      <!-- Goals Checklist Code - applies to each checklist item -->
       <div v-for="(goal, goalIndex) in goals" :key="goalIndex" class="goal">
         <div class="goal-header">
           <input
@@ -37,7 +37,7 @@
           />
           <div class="checklist-actions">
           <button @click="goal.editing = !goal.editing">
-            {{ goal.editing ? "Save" : "Edit" }}
+            {{ goal.editing ? "Save" : "Edit" }} <!-- This prevents the need for two separate buttons. -->
           </button>
           <div class="action-gap1"></div>
           <button @click="deleteGoal(goalIndex)">
@@ -208,10 +208,11 @@ export default {
 
 /* Content Container */
 h1{
+  /*This handles the "Goal Checklist" title.*/
   font-family: 'Montserrat', sans-serif;
   font-size: 2rem !important /* Using !important ensures this occurs despite all other css that exists */;
   Line-height: 1.5;
-  color:aqua !important
+  color:violet !important
 }
 .content {
   text-align: center;
@@ -239,8 +240,7 @@ input[type="text"] {
 button {
   padding: 5px 10px;
   cursor: pointer;
-  background-color: #6200ea;
-  border: none;
+  border: 2px solid blueviolet;
   color: white; /* Button font color - this needs to be separate from the input box*/
   border-radius: 5px;
 }
