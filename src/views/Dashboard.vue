@@ -1,12 +1,12 @@
 <script setup>
 //import { useLayout } from '@/layout/composables/layout';
 //import { onMounted, ref, watch } from 'vue';
-import { onMounted, ref } from 'vue';
-import { getMoods } from '@/services/backend/MoodService';
-import { getMoodLogs } from '@/services/backend/MoodLogService';
-import { getJournalEntries } from '@/services/backend/JournalEntryService';
 import { getGoals } from '@/services/backend/GoalService';
 import { getInsights } from '@/services/backend/InsightService';
+import { getJournalEntries } from '@/services/backend/JournalEntryService';
+import { getMoodLogs } from '@/services/backend/MoodLogService';
+import { getMoods } from '@/services/backend/MoodService';
+import { onMounted, ref } from 'vue';
 //const { getPrimary, getSurface, isDarkTheme } = useLayout();
 
 //const products = ref(null);
@@ -24,9 +24,9 @@ const items = ref([
     { label: 'Remove', icon: 'pi pi-fw pi-trash' }
 ]);
 */
-onMounted( async () => {
+onMounted(async () => {
     //chartData.value = setChartData();
-   //chartOptions.value = setChartOptions();
+    //chartOptions.value = setChartOptions();
     try {
         await fetchDashboardData();
     } catch (error) {
@@ -36,13 +36,7 @@ onMounted( async () => {
 });
 async function fetchDashboardData() {
     try {
-        const [moodsResponse, moodLogsResponse, journalEntriesResponse, goalsResponse, insightsResponse] = await Promise.all([
-            getMoods(),
-            getMoodLogs(),
-            getJournalEntries(),
-            getGoals(),
-            getInsights()
-        ]);
+        const [moodsResponse, moodLogsResponse, journalEntriesResponse, goalsResponse, insightsResponse] = await Promise.all([getMoods(), getMoodLogs(), getJournalEntries(), getGoals(), getInsights()]);
 
         moods.value = moodsResponse;
         moodLogs.value = moodLogsResponse;
@@ -173,7 +167,8 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                 <h3 class="mb-4">Recent Journal Entries</h3>
                 <ul>
                     <li v-for="entry in journalEntries.slice(0, 3)" :key="entry.id">
-                        <strong>{{ entry.title }}</strong>: {{ entry.content.substring(0, 100) }}...
+                        <strong>{{ entry.title }}</strong
+                        >: {{ entry.content.substring(0, 100) }}...
                     </li>
                 </ul>
             </div>
@@ -184,9 +179,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card">
                 <h3 class="mb-4">Active Goals</h3>
                 <ul>
-                    <li v-for="goal in goals.filter(goal => !goal.completed)" :key="goal.id">
-                        {{ goal.title }} - {{ goal.description }}
-                    </li>
+                    <li v-for="goal in goals.filter((goal) => !goal.completed)" :key="goal.id">{{ goal.title }} - {{ goal.description }}</li>
                 </ul>
             </div>
         </div>
@@ -196,9 +189,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
             <div class="card">
                 <h3 class="mb-4">Mood Insights</h3>
                 <ul>
-                    <li v-for="insight in insights.slice(0, 3)" :key="insight.id">
-                        {{ insight.trigger_word }} trends: {{ insight.mood_count }} occurrences in the last {{ insight.time_quantity }} {{ insight.time_frame }}
-                    </li>
+                    <li v-for="insight in insights.slice(0, 3)" :key="insight.id">{{ insight.trigger_word }} trends: {{ insight.mood_count }} occurrences in the last {{ insight.time_quantity }} {{ insight.time_frame }}</li>
                 </ul>
             </div>
         </div>
