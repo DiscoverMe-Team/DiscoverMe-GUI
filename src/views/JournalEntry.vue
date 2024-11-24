@@ -1,121 +1,137 @@
 <script>
 import { getJournalEntries } from '@/services/backend/JournalEntryService';
-import { ref } from 'vue';
-const journalEntries = ref([]);
+import { onMounted, ref } from 'vue';
 export default {
-    data() {
-        return {
-            title: '', // Bound to title input
-            entry: '', // Bound to entry textarea
-            savedEntries: this.fetchEntries(),
-            isFormVisible: false, // Controls the visibility of the journal entry form
-            isSaved: false, // Flag to show confirmation message after saving
-            editingEntry: null, // The entry that is being edited
-            isDeleteConfirmationVisible: false // Flag for showing delete confirmation
-        };
-    },
-    methods: {
-        async fetchEntries() {
+    setup() {
+        const title = ref(''); // Bound to title input
+        const entry = ref(''); // Bound to entry textarea
+        const savedEntries = ref([]);
+        const isFormVisible = ref(false); // Controls the visibility of the journal entry form
+        const isSaved = ref(false); // Flag to show confirmation message after saving
+        const editingEntry = ref(null); // The entry that is being edited
+        const isDeleteConfirmationVisible = ref(false); // Flag for showing delete confirmation
+
+        const fetchEntries = async () => {
             try {
                 const journalEntriesResponse = await Promise.all([getJournalEntries()]);
-                return journalEntriesResponse;
+                savedEntries.value = journalEntriesResponse || [];
             } catch (error) {
                 errorMessage.value = 'Error fetching data. Please try again later.';
                 console.error('Data Fetch Error:', error);
             }
-            return null;
-        },
+        };
 
         // Method to save the journal entry
-        saveEntry() {
-            if (this.title && this.entry) {
+        const saveEntry = () => {
+            if (title && entry) {
                 const currentTime = new Date();
                 const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format time to exclude seconds
                 const formattedDate = currentTime.toLocaleDateString(); // Get the date separately
                 const newEntry = {
-                    title: this.title,
-                    content: this.entry,
+                    title: title,
+                    content: entry,
                     timestamp: `${formattedDate} ${formattedTime}` // Combine date and formatted time
                 };
 
                 // If we're editing an existing entry, replace it
-                if (this.editingEntry !== null) {
-                    this.savedEntries[this.editingEntry] = newEntry;
+                if (editingEntry !== null) {
+                    savedEntries[editingEntry] = newEntry;
                 } else {
                     // Otherwise, add it as a new entry
-                    this.savedEntries.push(newEntry);
+                    savedEntries.push(newEntry);
                 }
 
                 // Save entries to localStorage to persist across page reloads
-                localStorage.setItem('savedEntries', JSON.stringify(this.savedEntries));
+                localStorage.setItem('savedEntries', JSON.stringify(savedEntries));
 
-                this.clearFields(); // Optionally clear the fields after saving
-                this.isSaved = true; // Show the confirmation message
+                clearFields(); // Optionally clear the fields after saving
+                isSaved = true; // Show the confirmation message
                 setTimeout(() => {
-                    this.isSaved = false; // Hide the confirmation after 3 seconds
+                    isSaved = false; // Hide the confirmation after 3 seconds
                 }, 3000);
-                this.isFormVisible = false; // Hide the form after saving
-                this.editingEntry = null; // Reset editing entry
+                isFormVisible = false; // Hide the form after saving
+                editingEntry = null; // Reset editing entry
             } else {
                 alert('Please provide both a title and an entry!');
             }
-        },
+        };
 
         // Method to delete the current journal entry (reset fields)
-        deleteEntry() {
-            if (this.editingEntry !== null) {
+        const deleteEntry = () => {
+            if (editingEntry !== null) {
                 // Remove the entry from the array
-                this.savedEntries.splice(this.editingEntry, 1);
-                localStorage.setItem('savedEntries', JSON.stringify(this.savedEntries)); // Update localStorage
+                savedEntries.splice(editingEntry, 1);
+                localStorage.setItem('savedEntries', JSON.stringify(savedEntries)); // Update localStorage
 
                 // Clear the form, reset state, and navigate back
-                this.clearFields();
-                this.isFormVisible = false;
-                this.editingEntry = null;
+                clearFields();
+                isFormVisible = false;
+                editingEntry = null;
 
                 // Hide confirmation
-                this.isDeleteConfirmationVisible = false;
+                isDeleteConfirmationVisible = false;
 
                 // Provide user feedback
-                this.$nextTick(() => {
+                $nextTick(() => {
                     alert('Entry deleted successfully!');
                 });
             }
-        },
+        };
 
         // Method to cancel (reset fields)
-        cancelEntry() {
-            this.clearFields();
-            this.isFormVisible = false; // Hide the form when cancel is clicked
-            this.editingEntry = null; // Reset editing entry
-        },
+        const cancelEntry = () => {
+            clearFields();
+            isFormVisible = false; // Hide the form when cancel is clicked
+            editingEntry = null; // Reset editing entry
+        };
 
         // Helper method to clear the input fields
-        clearFields() {
-            this.title = '';
-            this.entry = '';
-        },
+        const clearFields = () => {
+            title = '';
+            entry = '';
+        };
 
-        showForm() {
-            this.clearFields(); // Clear any existing data in the form
-            this.isFormVisible = true;
-            this.isSaved = false; // Reset saved message when showing form
-            this.editingEntry = null; // Ensure we're not editing an existing entry
-        },
+        const showForm = () => {
+            clearFields(); // Clear any existing data in the form
+            isFormVisible = true;
+            isSaved = false; // Reset saved message when showing form
+            editingEntry = null; // Ensure we're not editing an existing entry
+        };
 
-        goBack() {
-            this.isFormVisible = false; // Hide form and show list of entries
-            this.editingEntry = null; // Reset editing entry when going back
-        },
+        const goBack = () => {
+            isFormVisible = false; // Hide form and show list of entries
+            editingEntry = null; // Reset editing entry when going back
+        };
 
         // Method to start editing an entry
-        editEntry(index) {
-            const entryToEdit = this.savedEntries[index];
-            this.title = entryToEdit.title;
-            this.entry = entryToEdit.content;
-            this.isFormVisible = true; // Show the form for editing
-            this.editingEntry = index; // Set the entry being edited
-        }
+        const editEntry = (index) => {
+            const entryToEdit = savedEntries[index];
+            title = entryToEdit.title;
+            entry = entryToEdit.content;
+            isFormVisible = true; // Show the form for editing
+            editingEntry = index; // Set the entry being edited
+        };
+
+        onMounted(() => {
+            fetchEntries();
+            alert(savedEntries.value);
+        });
+
+        return {
+            title,
+            entry,
+            isFormVisible,
+            isSaved,
+            editingEntry,
+            saveEntry,
+            deleteEntry,
+            editEntry,
+            clearFields,
+            showForm,
+            goBack,
+            cancelEntry,
+            savedEntries
+        };
     }
 };
 </script>
