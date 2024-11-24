@@ -1,5 +1,6 @@
 <script>
-import { getJournalEntries } from '@/services/backend/JournalEntryService';
+import { JournalEntry } from '@/models/JournalEntry';
+import { createJournalEntry, deleteJournalEntry, getJournalEntries } from '@/services/backend/JournalEntryService';
 import { onMounted, ref } from 'vue';
 export default {
     setup() {
@@ -13,7 +14,7 @@ export default {
 
         const fetchEntries = async () => {
             try {
-                const journalEntriesResponse = await Promise.all([getJournalEntries()]);
+                const journalEntriesResponse = await getJournalEntries();
                 savedEntries.value = journalEntriesResponse || [];
             } catch (error) {
                 errorMessage.value = 'Error fetching data. Please try again later.';
@@ -23,22 +24,23 @@ export default {
 
         // Method to save the journal entry
         const saveEntry = () => {
-            if (title && entry) {
+            if (title.value && entry.value) {
                 const currentTime = new Date();
                 const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format time to exclude seconds
                 const formattedDate = currentTime.toLocaleDateString(); // Get the date separately
+                new JournalEntry();
                 const newEntry = {
-                    title: title,
-                    content: entry,
-                    timestamp: `${formattedDate} ${formattedTime}` // Combine date and formatted time
+                    title: title.value,
+                    content: entry.value,
+                    created_at: `${formattedDate} ${formattedTime}` // Combine date and formatted time
                 };
 
                 // If we're editing an existing entry, replace it
-                if (editingEntry !== null) {
+                if (editingEntry.value !== null) {
                     savedEntries[editingEntry] = newEntry;
                 } else {
                     // Otherwise, add it as a new entry
-                    savedEntries.push(newEntry);
+                    createJournalEntry(newEntry);
                 }
 
                 // Save entries to localStorage to persist across page reloads
@@ -49,8 +51,8 @@ export default {
                 setTimeout(() => {
                     isSaved = false; // Hide the confirmation after 3 seconds
                 }, 3000);
-                isFormVisible = false; // Hide the form after saving
-                editingEntry = null; // Reset editing entry
+                isFormVisible.value = false; // Hide the form after saving
+                editingEntry.value = null; // Reset editing entry
             } else {
                 alert('Please provide both a title and an entry!');
             }
@@ -58,18 +60,17 @@ export default {
 
         // Method to delete the current journal entry (reset fields)
         const deleteEntry = () => {
-            if (editingEntry !== null) {
+            if (editingEntry.value !== null) {
                 // Remove the entry from the array
-                savedEntries.splice(editingEntry, 1);
-                localStorage.setItem('savedEntries', JSON.stringify(savedEntries)); // Update localStorage
+                deleteJournalEntry(editingEntry.value.id);
 
                 // Clear the form, reset state, and navigate back
                 clearFields();
-                isFormVisible = false;
-                editingEntry = null;
+                isFormVisible.value = false;
+                editingEntry.value = null;
 
                 // Hide confirmation
-                isDeleteConfirmationVisible = false;
+                isDeleteConfirmationVisible.value = false;
 
                 // Provide user feedback
                 $nextTick(() => {
@@ -81,40 +82,39 @@ export default {
         // Method to cancel (reset fields)
         const cancelEntry = () => {
             clearFields();
-            isFormVisible = false; // Hide the form when cancel is clicked
-            editingEntry = null; // Reset editing entry
+            isFormVisible.value = false; // Hide the form when cancel is clicked
+            editingEntry.value = null; // Reset editing entry
         };
 
         // Helper method to clear the input fields
         const clearFields = () => {
-            title = '';
-            entry = '';
+            title.value = '';
+            entry.value = '';
         };
 
         const showForm = () => {
             clearFields(); // Clear any existing data in the form
-            isFormVisible = true;
-            isSaved = false; // Reset saved message when showing form
-            editingEntry = null; // Ensure we're not editing an existing entry
+            isFormVisible.value = true;
+            isSaved.value = false; // Reset saved message when showing form
+            editingEntry.value = null; // Ensure we're not editing an existing entry
         };
 
         const goBack = () => {
-            isFormVisible = false; // Hide form and show list of entries
-            editingEntry = null; // Reset editing entry when going back
+            isFormVisible.value = false; // Hide form and show list of entries
+            editingEntry.value = null; // Reset editing entry when going back
         };
 
         // Method to start editing an entry
         const editEntry = (index) => {
-            const entryToEdit = savedEntries[index];
-            title = entryToEdit.title;
-            entry = entryToEdit.content;
-            isFormVisible = true; // Show the form for editing
-            editingEntry = index; // Set the entry being edited
+            const entryToEdit = savedEntries.value[index];
+            title.value = entryToEdit.title;
+            entry.value = entryToEdit.content;
+            isFormVisible.value = true; // Show the form for editing
+            editingEntry.value = entryToEdit; // Set the entry being edited
         };
 
         onMounted(() => {
             fetchEntries();
-            alert(savedEntries.value);
         });
 
         return {
@@ -181,7 +181,7 @@ export default {
                     <ul>
                         <li v-for="(entry, index) in savedEntries" :key="index">
                             <a href="#" @click.prevent="editEntry(index)" class="entry-link">
-                                <strong>{{ entry.title }}</strong> - {{ entry.timestamp }}
+                                <strong>{{ entry.title }}</strong> - {{ entry.created_at }}
                             </a>
                         </li>
                     </ul>
