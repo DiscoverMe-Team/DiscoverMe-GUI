@@ -16,7 +16,8 @@ app.use(PrimeVue, {
     theme: {
         preset: Lara,
         options: {
-            darkModeSelector: '.app-dark'
+            darkModeSelector: '.app-dark',
+            primaryColor: '#00000'
         }
     }
 });
