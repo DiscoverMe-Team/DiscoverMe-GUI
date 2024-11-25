@@ -50,7 +50,6 @@ const router = createRouter({
                     name: 'panel',
                     component: () => import('@/views/uikit/PanelsDoc.vue')
                 },
-
                 {
                     path: '/uikit/overlay',
                     name: 'overlay',
@@ -110,7 +109,7 @@ const router = createRouter({
         },
         {
             path: '/home',
-            name: 'landing',
+            name: 'home',
             component: () => import('@/views/pages/Landing.vue')
         },
         {
@@ -118,7 +117,6 @@ const router = createRouter({
             name: 'notfound',
             component: () => import('@/views/pages/NotFound.vue')
         },
-
         {
             path: '/auth/login',
             name: 'login',
@@ -138,15 +136,26 @@ const router = createRouter({
             path: '/auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
+        },
+        // Catch-all route for undefined paths
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'catchAll',
+            component: () => import('@/views/pages/NotFound.vue')
         }
     ]
 });
 
 router.beforeEach((to, from, next) => {
+    // If a route requires authentication and the user is not authenticated
     if (to.meta.requiresAuth && !isAuthenticated()) {
-        next('/auth/login');
+        next('/home'); // Redirect unauthenticated users to Landing Page
+    }
+    // If the user is authenticated and tries to access the Landing Page, redirect to Dashboard
+    else if (to.name === 'home' && isAuthenticated()) {
+        next('/'); // Redirect authenticated users to the Dashboard
     } else {
-        next();
+        next(); // Proceed to the route
     }
 });
 
