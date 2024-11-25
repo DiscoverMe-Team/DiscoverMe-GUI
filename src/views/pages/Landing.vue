@@ -12,7 +12,7 @@ function smoothScroll(id) {
         <div id="home" class="landing-wrapper overflow-hidden">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
                 <a class="flex items-center" href="#">
-                    <img src="/Logo_NoBackground.png" alt="DiscoverMe Logo" class="h-12 mr-2" />
+                    <img src="/logo.png" alt="DiscoverMe Logo" class="h-12 mr-2" />
                     <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">DiscoverMe</span>
                 </a>
                 <Button class="lg:!hidden" text severity="secondary" rounded
@@ -142,7 +142,7 @@ function smoothScroll(id) {
                     <div class="col-span-12 md:col-span-2 flex items-center justify-center md:justify-start">
                         <a @click="smoothScroll('#home')"
                             class="flex flex-wrap items-center justify-center md:justify-start md:mb-0 mb-4 cursor-pointer">
-                            <img src="/Logo_NoBackground.png" alt="DiscoverMe Logo" />
+                            <img src="/logo.png" alt="DiscoverMe Logo" style="max-width: 50px;" />
                             <h4 class="font-medium text-3xl text-surface-900 dark:text-surface-0">DiscoverMe</h4>
                         </a>
                     </div>
