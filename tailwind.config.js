@@ -14,24 +14,27 @@ module.exports = {
         extend: {
             colors: {
                 primary: {
-                    light: '#a3d8f4',
-                    DEFAULT: '#9C27B0', // Default primary color (Blue)
-                    dark: '#8369a1',
+                    DEFAULT: '#8A2BE2', // Main purple
+                    light: '#A779E9',  // Lighter purple
                 },
-                secondary: {
-                    light: '#fbcfe8',
-                    DEFAULT: '#ec4899', // Default secondary color (Pink)
-                    dark: '#db2777',
+                background: {
+                    gradientStart: '#F8E8F2', // Pink
+                    gradientEnd: '#E3DFF5',   // Lavender
                 },
                 neutral: {
-                    light: '#e5e7eb',
-                    DEFAULT: '#6b7280', // Default neutral color (Gray)
-                    dark: '#374151',
+                    dark: '#4B4B4B', // Dark text
+                    light: '#B3B3B3', // Light text
+                },
+                card: {
+                    bg: '#FFFFFF', // White background for cards
                 },
                 danger: '#dc2626', // Custom color for danger actions
                 success: '#16a34a', // Custom color for success actions
                 warning: '#facc15', // Custom color for warnings
             },
+        },
+        backgroundImage: {
+            'custom-gradient': 'linear-gradient(to bottom, #F8E8F2, #E3DFF5)',
         },
     },
 };
