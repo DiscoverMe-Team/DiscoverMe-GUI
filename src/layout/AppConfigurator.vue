@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { $t, updatePreset, updateSurfacePalette } from '@primevue/themes';
 import Aura from '@primevue/themes/aura';
@@ -194,6 +195,16 @@ function onPresetChange() {
 function onMenuModeChange() {
     setMenuMode(menuMode.value);
 }
+
+onMounted(() => {
+    // Ensure the primary color is set to a default or configured value
+    if (!layoutConfig.primary) {
+        console.log('Initializing primary color to "green".');
+        setPrimary('violet'); // Set default primary color to "green"
+    } else {
+        console.log('Primary color already configured:', layoutConfig.primary);
+    }
+});
 </script>
 
 <template>

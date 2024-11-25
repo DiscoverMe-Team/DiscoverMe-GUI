@@ -20,8 +20,41 @@ export const destroyTokens = () => {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
 };
 
-// Check if the user is authenticated (i.e., access token exists)
-export const isAuthenticated = () => !!getAccessToken();
+// Decode JWT payload without using external libraries
+const decodeTokenPayload = (token) => {
+    try {
+        const base64Payload = token.split('.')[1]; // Get the payload part
+        const decodedPayload = atob(base64Payload); // Decode Base64
+        return JSON.parse(decodedPayload); // Parse JSON
+    } catch (error) {
+        console.error('Error decoding token payload:', error);
+        return null;
+    }
+};
+
+// Check if the user is authenticated (i.e., access token exists and is valid)
+export const isAuthenticated = () => {
+    const token = getAccessToken();
+    if (!token) return false;
+
+    const payload = decodeTokenPayload(token);
+    if (!payload || !payload.exp) return false;
+
+    // Check if the token is expired
+    return Date.now() < payload.exp * 1000; // `exp` is in seconds; `Date.now()` is in milliseconds
+};
 
 // Check if the refresh token exists
 export const hasRefreshToken = () => !!getRefreshToken();
+
+// Token expiration check with optional grace period (in seconds)
+export const isAccessTokenExpiringSoon = (gracePeriod = 60) => {
+    const token = getAccessToken();
+    if (!token) return true;
+
+    const payload = decodeTokenPayload(token);
+    if (!payload || !payload.exp) return true;
+
+    // Check if token will expire within the grace period
+    return Date.now() >= (payload.exp * 1000 - gracePeriod * 1000);
+};

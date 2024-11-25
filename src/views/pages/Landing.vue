@@ -13,8 +13,7 @@ function smoothScroll(id) {
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
                 <a class="flex items-center" href="#">
                     <img src="/Logo_NoBackground.png" alt="DiscoverMe Logo" class="h-12 mr-2" />
-                    <span
-                        class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">DiscoverMe</span>
+                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">DiscoverMe</span>
                 </a>
                 <Button class="lg:!hidden" text severity="secondary" rounded
                     v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }">
