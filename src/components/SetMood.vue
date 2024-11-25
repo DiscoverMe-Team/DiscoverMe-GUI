@@ -68,7 +68,6 @@
     };
   
     try {
-      alert(moodLogData.mood);
       const newMoodLog = await createMoodLog(moodLogData);
       console.log('Mood log created:', newMoodLog);
       emit('save', newMoodLog); // Emit the saved mood log

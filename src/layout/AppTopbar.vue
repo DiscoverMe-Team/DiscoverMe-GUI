@@ -2,27 +2,20 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
-import { User } from '@/models/User'; // Import the User model
-import { getUserInfo } from '@/services/backend/UserService'; // Import the service for fetching user info
+import { User } from '@/models/User'; 
+import { getUserInfo } from '@/services/backend/UserService';
 
-// Layout controls
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
-
-// State for profile dropdown visibility
 const showProfileMenu = ref(false);
-
-// Vue Router instance
 const router = useRouter();
-
-// User state using the User model
-const user = ref(new User()); // Initialize an empty User instance
+const user = ref(new User());
+const currentDate = ref('');
 
 // Toggles the profile menu
 function toggleProfileMenu() {
     showProfileMenu.value = !showProfileMenu.value;
 }
 
-// Closes the profile menu when clicking outside
 function closeProfileMenu(event) {
     const dropdown = document.querySelector('.relative');
     if (dropdown && !dropdown.contains(event.target)) {
@@ -30,7 +23,7 @@ function closeProfileMenu(event) {
     }
 }
 
-// Fetch user information on mount
+// Fetch user info
 async function fetchUserInfo() {
     try {
         const fetchedUser = await getUserInfo();
@@ -41,21 +34,30 @@ async function fetchUserInfo() {
     }
 }
 
+// Format and set the current date
 onMounted(() => {
     document.addEventListener('click', closeProfileMenu);
     fetchUserInfo();
+
+    const date = new Date();
+    currentDate.value = date.toLocaleDateString(undefined, {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+    });
 });
 
 onUnmounted(() => {
     document.removeEventListener('click', closeProfileMenu);
 });
 
-
 function logout() {
-    localStorage.removeItem('accessToken'); 
-    router.push('/home'); 
+    localStorage.removeItem('accessToken');
+    router.push('/home');
 }
 </script>
+
 
 <template>
     <div class="layout-topbar bg-surface-2">
@@ -71,7 +73,9 @@ function logout() {
                 <span>DiscoverMe</span>
             </router-link>
         </div>
-
+        <div class="layout-topbar-date text-center text-lg font-medium hidden sm:block">
+            {{ currentDate }}
+        </div>
         <div class="layout-topbar-actions" style="padding-right: 0.5rem;">
             <!-- Profile Dropdown -->
             <div class="relative">
@@ -124,11 +128,13 @@ function logout() {
     padding: 0.5rem 1rem;
     background-color: var(--surface-card);
     border-bottom: 1px solid var(--surface-border);
+    flex-wrap: wrap; /* Allow elements to wrap if needed */
 }
 
 .layout-topbar-logo-container {
     display: flex;
     align-items: center;
+
 }
 
 .layout-topbar-logo img {
@@ -136,51 +142,24 @@ function logout() {
     margin-right: 0.5rem;
 }
 
+.layout-topbar-date {
+    flex-grow: 1;
+    padding-right: 150px;
+    text-align: center;
+    color: var(--text-color-primary);
+}
+
 .layout-topbar-actions {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-right: 1rem; /* Add margin for proper spacing */
+    margin-right: 1rem;
 }
 
-.layout-topbar-action {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    color: var(--text-color);
-    border-radius: 0.25rem;
-    transition: background-color 0.3s ease, color 0.2s ease-in-out;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+@media (max-width: 640px) {
+    .layout-topbar-date {
+        display: none; /* Hide date on smaller screens */
+    }
 
-.layout-topbar-action i {
-    transition: color 0.2s ease-in-out;
-}
-
-.layout-topbar-action:hover {
-    background-color: var(--surface-hover);
-}
-
-.layout-topbar-action:hover i {
-    color: var(--primary-color);
-}
-
-.profile-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem; /* Space between icon and name */
-    max-width: 150px; /* Limit maximum width to avoid overflow */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.profile-name {
-    font-size: 0.875rem; /* Adjust font size for better fit */
-    color: var(--text-color-secondary); /* Match theme */
-    margin-left: 0.25rem;
 }
 </style>

@@ -14,7 +14,6 @@ export const getMoodLogById = async (id) => {
 };
 
 export const createMoodLog = async (data) => {
-    alert(data);
     const response = await api.post('/moodlogs/', data);
     return mapToMoodLog(response.data);
 };

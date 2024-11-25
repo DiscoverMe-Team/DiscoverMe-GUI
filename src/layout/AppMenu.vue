@@ -8,12 +8,7 @@ const model = ref([
         label: 'Home',
         items: [
             { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-            { label: 'Journal Entries', icon: 'pi pi-pencil', to: '/journal' }
-        ]
-    },
-    {
-        label: 'Features',
-        items: [
+            { label: 'Journal Entries', icon: 'pi pi-pencil', to: '/journal' },
             {label: 'Goal Setting', icon: 'pi pi-fw pi-check-square', to: '/goals'}
         ]
     },
@@ -109,22 +104,6 @@ const model = ref([
             }
         ]
     },
-    {
-        label: 'Get Started',
-        items: [
-            {
-                label: 'Documentation',
-                icon: 'pi pi-fw pi-book',
-                to: '/documentation'
-            },
-            {
-                label: 'View Source',
-                icon: 'pi pi-fw pi-github',
-                url: 'https://github.com/primefaces/DiscoverMe-vue',
-                target: '_blank'
-            }
-        ]
-    }
 ]);
 </script>
 

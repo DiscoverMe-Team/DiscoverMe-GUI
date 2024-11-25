@@ -40,3 +40,99 @@ body {
 .bg-surface-2 {
     background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
 }
+
+.dashboard-card {
+    background-color: var(--card, #ffffff); /* Keep your current background color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+    overflow: hidden; /* Ensures content stays within the rounded borders */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effect */
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px); /* Subtle lift on hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Dashboard Card Header */
+.dashboard-card-header {
+    background-color: var(--primary-color, #8A2BE2); /* Use your theme’s primary color */
+    color: #ffffff; /* White text for contrast */
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    text-transform: uppercase; /* Add emphasis with uppercase letters */
+}
+
+/* Dashboard Card Body */
+.dashboard-card-body {
+    padding: 1rem;
+    color: var(--text-color, #333333); /* Use your existing text color */
+    font-size: 0.9rem;
+}
+
+.dashboard-card-body p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.dashboard-card-header i {
+    margin-right: 2px;
+   
+}
+
+.dashboard-card-body .icon {
+    font-size: 2.5rem;
+    color: var(--primary-color-light, #A779E9); /* Light shade for icons */
+    margin-bottom: 1rem;
+}
+
+.greeting{
+    color: var(--text-color-secondary, #A779E9);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between; /* Push greeting and weather to opposite sides */
+    align-items: center; /* Vertically align items */
+}
+
+.weather-info {
+    background: none;
+    padding: 1rem; /* Add padding */
+    border-radius: 10px; /* Rounded corners */
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Space between icon and details */
+}
+
+.weather-info .icon {
+    font-size: 2rem;
+    color: #eeeeee; /* Match your theme color for the icon */
+}
+
+.weather-details .temperature {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.weather-details .location {
+    font-size: 0.875rem;
+    color: #ffffff; /* Neutral color for location text */
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column; /* Stack items vertically on small screens */
+        gap: 1rem; /* Add space between greeting and weather */
+    }
+
+    .weather-info {
+        justify-content: center; /* Center the weather info */
+    }
+}
