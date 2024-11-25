@@ -1,11 +1,13 @@
-import api from './api';
 import { JournalEntry } from '@/models/JournalEntry';
+import api from './api';
 
 const mapToJournalEntry = (data) => new JournalEntry(data.id, data.user, data.title, data.content, data.created_at);
 
 export const getJournalEntries = async () => {
     const response = await api.get('/journalentries/');
-    return response.data.map(mapToJournalEntry);
+
+    // Map and sort the entries before returning
+    return response.data.map(mapToJournalEntry).sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Sort by createdAt in descending order
 };
 
 export const getJournalEntryById = async (id) => {

@@ -3,3 +3,40 @@
 @import 'primeicons/primeicons.css';
 @import '@/assets/demo/demo.scss';
 
+:root {
+    --primary-color: #8A2BE2;
+    --primary-color-light: #A779E9;
+    --text-color: #4B4B4B;
+    --text-color-secondary: #B3B3B3;
+    --background-gradient-start: #F8E8F2;
+    --background-gradient-end: #E3DFF5;
+    --card-bg: #FFFFFF;
+}
+
+body {
+    background: linear-gradient(to bottom, #8e44ad, #3498db); /* Adjust gradient colors */
+    color: var(--text-color);
+    
+}
+.card {
+    
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.bg-gradient {
+    background: linear-gradient(to bottom, #8e44ad, #3498db); /* Adjust gradient colors */
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bg-surface-2 {
+    background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
+}
