@@ -44,12 +44,19 @@ const handleSignUp = async () => {
 </script>
 
 <template>
-    <FloatingConfigurator />
-    <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
+    
+    <div class="bg-gradient bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
         <div class="flex flex-col items-center justify-center">
             <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
-                <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
-                    <div class="text-center mb-8">
+                <div class="w-full bg-surface-2  dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
+                    <div class="flex flex-col items-center text-center mb-8">
+                        
+                        <img
+                            :src="isDarkTheme ? '/logo.png' : '/logo.png'"
+                            alt="DiscoverMe Logo"
+                            class="h-20 w-auto mb-4"
+                            style="max-width: 70px;"
+                        />
                         <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Create Your Account</div>
                         <span class="text-muted-color font-medium">Sign up to get started</span>
                     </div>

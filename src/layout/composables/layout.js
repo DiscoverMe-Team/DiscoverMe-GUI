@@ -1,8 +1,8 @@
 import { computed, reactive, readonly } from 'vue';
 
 const layoutConfig = reactive({
-    preset: 'Aura',
-    primary: 'emerald',
+    preset: 'violet',
+    primary: 'violet',
     surface: null,
     darkTheme: false,
     menuMode: 'static'
@@ -11,16 +11,16 @@ const layoutConfig = reactive({
 const layoutState = reactive({
     staticMenuDesktopInactive: false,
     overlayMenuActive: false,
-    profileSidebarVisible: false,
+    profileSidebarVisible: true,
     configSidebarVisible: false,
     staticMenuMobileActive: false,
-    menuHoverActive: false,
+    menuHoverActive: true,
     activeMenuItem: null
 });
 
 export function useLayout() {
     const setPrimary = (value) => {
-        layoutConfig.primary = value;
+        layoutConfig.primary = 'violet';
     };
 
     const setSurface = (value) => {
@@ -28,7 +28,7 @@ export function useLayout() {
     };
 
     const setPreset = (value) => {
-        layoutConfig.preset = value;
+        layoutConfig.preset = 'violet';
     };
 
     const setActiveMenuItem = (item) => {
