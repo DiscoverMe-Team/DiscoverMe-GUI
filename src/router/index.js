@@ -1,6 +1,6 @@
 import AppLayout from '@/layout/AppLayout.vue';
-import { createRouter, createWebHistory } from 'vue-router';
 import { isAuthenticated } from '@/services/backend/auth';
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -14,6 +14,11 @@ const router = createRouter({
                     path: '/',
                     name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue')
+                },
+                {
+                    path: '/journal',
+                    name: 'journal',
+                    component: () => import('@/views/JournalEntry.vue')
                 },
                 {
                     path: '/uikit/formlayout',
@@ -112,6 +117,7 @@ const router = createRouter({
             name: 'home',
             component: () => import('@/views/pages/Landing.vue')
         },
+
         {
             path: '/pages/notfound',
             name: 'notfound',

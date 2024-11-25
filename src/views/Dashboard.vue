@@ -1,4 +1,5 @@
 <script setup>
+
 import { ref, onMounted } from 'vue';
 import { getMoods, getMoodById } from '@/services/backend/MoodService';
 import { getMoodLogs } from '@/services/backend/MoodLogService';
@@ -7,6 +8,7 @@ import { getGoals } from '@/services/backend/GoalService';
 import { getInsights } from '@/services/backend/InsightService';
 import SetMood from '@/components/SetMood.vue'; // Import the SetMood component
 
+
 // Dashboard data
 const moods = ref([]);
 const moodLogs = ref([]);
@@ -14,7 +16,6 @@ const journalEntries = ref([]);
 const goals = ref([]);
 const insights = ref([]);
 const errorMessage = ref('');
-
 // Modal state for SetMood
 const showSetMoodDialog = ref(false);
 const currentMood = ref(null); // Stores the current mood for display
