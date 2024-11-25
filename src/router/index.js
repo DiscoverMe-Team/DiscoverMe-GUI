@@ -143,11 +143,19 @@ const router = createRouter({
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
         },
+
+        {
+            path: '/goals',
+            name: 'goals',
+            component: () => import('@/views/Goals.vue')
+        },
+
         // Catch-all route for undefined paths
         {
             path: '/:pathMatch(.*)*',
             name: 'catchAll',
             component: () => import('@/views/pages/NotFound.vue')
+
         }
     ]
 });
