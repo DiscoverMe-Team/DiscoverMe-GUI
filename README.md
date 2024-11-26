@@ -11,7 +11,7 @@ DiscoverMe is a comprehensive web-based Mood & Mental Health Tracker designed to
 - Usage
 - Directory Structure
 - Contributing
-- License
+
 
 ## Project Overview
 

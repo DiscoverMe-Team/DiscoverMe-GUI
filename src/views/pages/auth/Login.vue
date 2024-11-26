@@ -1,5 +1,4 @@
 <script setup>
-import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { login } from '@/services/backend/api';
 import { saveTokens } from '@/services/backend/auth';
 import { ref } from 'vue';
@@ -15,22 +14,14 @@ const handleLogin = async () => {
     errorMessage.value = '';
 
     try {
-        // Send login request to the backend
         const response = await login({
-            username: username.value, // Use `username` if your backend expects it instead of `email`
+            username: username.value,
             password: password.value
         });
-
-        // Extract access and refresh tokens from the response
         const { access, refresh } = response.data;
-
-        // Save tokens to localStorage
         saveTokens(access, refresh);
-
-        // Redirect to the dashboard after successful login
         router.push('/');
     } catch (error) {
-        // Display an error message if the login fails
         errorMessage.value = error.response?.data?.detail || 'Login failed. Please check your credentials.';
         console.error('Login error:', error);
     }
@@ -88,7 +79,7 @@ const handleLogin = async () => {
 
 
 .login-container {
-    background: white; /* Add a light background for the form */
+    background: white;
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     padding: 2rem;

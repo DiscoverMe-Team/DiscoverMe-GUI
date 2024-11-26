@@ -11,7 +11,6 @@ const router = useRouter();
 const user = ref(new User());
 const currentDate = ref('');
 
-// Toggles the profile menu
 function toggleProfileMenu() {
     showProfileMenu.value = !showProfileMenu.value;
 }
@@ -23,7 +22,6 @@ function closeProfileMenu(event) {
     }
 }
 
-// Fetch user info
 async function fetchUserInfo() {
     try {
         const fetchedUser = await getUserInfo();
@@ -34,7 +32,6 @@ async function fetchUserInfo() {
     }
 }
 
-// Format and set the current date
 onMounted(() => {
     document.addEventListener('click', closeProfileMenu);
     fetchUserInfo();
@@ -128,7 +125,7 @@ function logout() {
     padding: 0.5rem 1rem;
     background-color: var(--surface-card);
     border-bottom: 1px solid var(--surface-border);
-    flex-wrap: wrap; /* Allow elements to wrap if needed */
+    flex-wrap: wrap;
 }
 
 .layout-topbar-logo-container {
@@ -158,7 +155,7 @@ function logout() {
 
 @media (max-width: 640px) {
     .layout-topbar-date {
-        display: none; /* Hide date on smaller screens */
+        display: none;
     }
 
 }

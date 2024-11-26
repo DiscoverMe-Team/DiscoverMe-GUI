@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    darkMode: ['class', '[class*="app-dark"]'], // Custom dark mode configuration
-    content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'], // File paths
-    plugins: [require('tailwindcss-primeui')], // PrimeUI plugin
+    darkMode: ['class', '[class*="app-dark"]'], 
+    content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'], 
+    plugins: [require('tailwindcss-primeui')], 
     theme: {
         screens: {
             sm: '576px',

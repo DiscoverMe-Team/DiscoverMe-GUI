@@ -6,10 +6,10 @@ export default {
 
 <template>
     <div>
-        <!-- Your component content here -->
+
     </div>
 </template>
 
 <style>
-/* Optional styles */
+
 </style>

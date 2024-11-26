@@ -4,13 +4,13 @@ import { createJournalEntry, deleteJournalEntry, getJournalEntries } from '@/ser
 import { onMounted, ref } from 'vue';
 export default {
     setup() {
-        const title = ref(''); // Bound to title input
-        const entry = ref(''); // Bound to entry textarea
+        const title = ref('');
+        const entry = ref('');
         const savedEntries = ref([]);
-        const isFormVisible = ref(false); // Controls the visibility of the journal entry form
-        const isSaved = ref(false); // Flag to show confirmation message after saving
-        const editingEntry = ref(null); // The entry that is being edited
-        const isDeleteConfirmationVisible = ref(false); // Flag for showing delete confirmation
+        const isFormVisible = ref(false);
+        const isSaved = ref(false);
+        const editingEntry = ref(null);
+        const isDeleteConfirmationVisible = ref(false);
 
         const fetchEntries = async () => {
             try {
@@ -27,90 +27,78 @@ export default {
             if (title.value && entry.value) {
                 const currentTime = new Date();
                 const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format time to exclude seconds
-                const formattedDate = currentTime.toLocaleDateString(); // Get the date separately
+                const formattedDate = currentTime.toLocaleDateString();
                 new JournalEntry();
                 const newEntry = {
                     title: title.value,
                     content: entry.value,
-                    created_at: `${formattedDate} ${formattedTime}` // Combine date and formatted time
+                    created_at: `${formattedDate} ${formattedTime}`
                 };
 
-                // If we're editing an existing entry, replace it
                 if (editingEntry.value !== null) {
                     savedEntries[editingEntry] = newEntry;
                 } else {
-                    // Otherwise, add it as a new entry
                     createJournalEntry(newEntry);
                 }
 
-                // Save entries to localStorage to persist across page reloads
+               
                 localStorage.setItem('savedEntries', JSON.stringify(savedEntries));
 
-                clearFields(); // Optionally clear the fields after saving
-                isSaved = true; // Show the confirmation message
+                clearFields();
+                isSaved = true;
                 setTimeout(() => {
-                    isSaved = false; // Hide the confirmation after 3 seconds
+                    isSaved = false;
                 }, 3000);
-                isFormVisible.value = false; // Hide the form after saving
-                editingEntry.value = null; // Reset editing entry
+                isFormVisible.value = false;
+                editingEntry.value = null;
             } else {
                 alert('Please provide both a title and an entry!');
             }
         };
 
-        // Method to delete the current journal entry (reset fields)
         const deleteEntry = () => {
             if (editingEntry.value !== null) {
-                // Remove the entry from the array
-                deleteJournalEntry(editingEntry.value.id);
 
-                // Clear the form, reset state, and navigate back
+                deleteJournalEntry(editingEntry.value.id);
                 clearFields();
                 isFormVisible.value = false;
                 editingEntry.value = null;
-
-                // Hide confirmation
                 isDeleteConfirmationVisible.value = false;
-
-                // Provide user feedback
                 $nextTick(() => {
                     alert('Entry deleted successfully!');
                 });
             }
         };
 
-        // Method to cancel (reset fields)
         const cancelEntry = () => {
             clearFields();
-            isFormVisible.value = false; // Hide the form when cancel is clicked
-            editingEntry.value = null; // Reset editing entry
+            isFormVisible.value = false;
+            editingEntry.value = null;
         };
 
-        // Helper method to clear the input fields
         const clearFields = () => {
             title.value = '';
             entry.value = '';
         };
 
         const showForm = () => {
-            clearFields(); // Clear any existing data in the form
+            clearFields();
             isFormVisible.value = true;
-            isSaved.value = false; // Reset saved message when showing form
-            editingEntry.value = null; // Ensure we're not editing an existing entry
+            isSaved.value = false;
+            editingEntry.value = null;
         };
 
         const goBack = () => {
-            isFormVisible.value = false; // Hide form and show list of entries
-            editingEntry.value = null; // Reset editing entry when going back
+            isFormVisible.value = false;
+            editingEntry.value = null;
         };
 
-        // Method to start editing an entry
         const editEntry = (index) => {
             const entryToEdit = savedEntries.value[index];
             title.value = entryToEdit.title;
             entry.value = entryToEdit.content;
-            isFormVisible.value = true; // Show the form for editing
-            editingEntry.value = entryToEdit; // Set the entry being edited
+            isFormVisible.value = true;
+            editingEntry.value = entryToEdit;
         };
 
         onMounted(() => {
@@ -193,28 +181,27 @@ export default {
 
 <style scoped>
 .title-input {
-    width: auto; /* Allow the input box to shrink or expand */
-    max-width: 400px; /* Max width of the title box */
-    min-width: 150px; /* Minimum width of the title box */
-    padding: 8px; /* Optional: Adjust padding as needed */
-    box-sizing: border-box; /* Ensures padding doesn't affect the total width */
+    width: auto;
+    max-width: 400px;
+    min-width: 150px;
+    padding: 8px;
+    box-sizing: border-box;
 }
 
 .small-button {
-    padding: 6px 12px; /* Smaller padding */
-    font-size: 14px; /* Smaller text size */
-    min-width: 80px; /* Set a smaller minimum width for buttons */
-    max-width: 120px; /* Set a maximum width for buttons */
+    padding: 6px 12px;
+    font-size: 14px;
+    min-width: 80px;
+    max-width: 120px;
 }
 
 .large-button {
-    padding: 8px 12px; /* Smaller padding */
-    font-size: 14px; /* Smaller text size */
-    min-width: 150px; /* Set a smaller minimum width for buttons */
-    max-width: 180px; /* Set a maximum width for buttons */
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 150px;
+    max-width: 180px;
 }
 
-/* Styling for the clickable entries */
 ul {
     list-style-type: none;
     padding-left: 0;

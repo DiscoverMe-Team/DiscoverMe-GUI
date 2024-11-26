@@ -7,7 +7,7 @@ import { getJournalEntries } from '@/services/backend/JournalEntryService';
 import { getGoals } from '@/services/backend/GoalService';
 import { getInsights } from '@/services/backend/InsightService';
 import { useUser } from '@/layout/composables/useUser';
-import SetMood from '@/components/SetMood.vue'; // Import the SetMood component
+import SetMood from '@/components/SetMood.vue'; 
 
 
 // Dashboard data
@@ -17,11 +17,9 @@ const journalEntries = ref([]);
 const goals = ref([]);
 const insights = ref([]);
 const errorMessage = ref('');
-// Modal state for SetMood
 const showSetMoodDialog = ref(false);
-const currentMood = ref(null); // Stores the current mood for display
+const currentMood = ref(null);
 const { user, fetchUserInfo } = useUser();
-// Fetch dashboard data on mount
 onMounted(async () => {
     try {
         fetchUserInfo();
@@ -59,9 +57,9 @@ async function fetchDashboardData() {
 
 async function handleMoodSave(moodLog) {
     try {
-        moodLogs.value.unshift(moodLog); // Optionally update local moodLogs immediately
-        currentMood.value = moodLog.mood.mood_type; // Update the current mood display
-        await fetchDashboardData(); // Refresh all dashboard data
+        moodLogs.value.unshift(moodLog);
+        currentMood.value = moodLog.mood.mood_type;
+        await fetchDashboardData();
     } catch (error) {
         console.error('Error reloading dashboard data:', error);
         alert('Failed to refresh data. Please try reloading the page.');

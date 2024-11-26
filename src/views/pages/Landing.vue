@@ -60,7 +60,7 @@ function smoothScroll(id) {
                     <Button label="Get Started" as="router-link" to="/auth/signup" rounded class="!text-xl mt-8 !px-4"></Button>
                 </div>
                 <div class="flex justify-center md:justify-end">
-                    <img src=/demo/images/DiscoverMe-Image.jpg alt="Hero Image" class="w-9/12 md:w-auto"
+                    <img src=/DiscoverMe-Image.jpg alt="Hero Image" class="w-9/12 md:w-auto"
                         style="max-width: 20%;" />
                 </div>
             </div>

@@ -1,5 +1,4 @@
 <script setup>
-import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { register } from '@/services/backend/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -22,7 +21,6 @@ const handleSignUp = async () => {
     }
 
     try {
-        // Send registration request to the backend
         await register({
             username: username.value,
             email: email.value,
@@ -30,13 +28,10 @@ const handleSignUp = async () => {
         });
 
         successMessage.value = 'Registration successful! Redirecting to login...';
-
-        // Redirect to the login page after successful registration
         setTimeout(() => {
             router.push('/auth/login');
         }, 2000);
     } catch (error) {
-        // Display an error message if registration fails
         errorMessage.value = error.response?.data?.error || 'Registration failed. Please try again.';
         console.error('Registration error:', error);
     }

@@ -13,7 +13,7 @@ import '@/assets/tailwind.css';
 const app = createApp(App);
 
 app.use(router);
-const MyPreset = definePreset(Lara, {
+const DicoverMeDefault = definePreset(Lara, {
     semantic: {
         primary: {
             50: '{violet.50}',
@@ -32,7 +32,7 @@ const MyPreset = definePreset(Lara, {
 });
 app.use(PrimeVue, {
     theme: {
-        preset: MyPreset,
+        preset: DicoverMeDefault,
         options: {
             darkModeSelector: '.app-dark',
             primaryColor: '#8b5cf6'
@@ -41,5 +41,4 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
-
 app.mount('#app');
