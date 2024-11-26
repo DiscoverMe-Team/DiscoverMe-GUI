@@ -1,4 +1,8 @@
 <template>
+  <div class="layout-sidebar bg-surface-2">
+        <app-menu></app-menu>
+    </div>
+
   <div class="app">
     <div class="content">
        <!-- Back Button Code -->
@@ -87,9 +91,86 @@
       </div>
     </div>
   </div>
+
+<!--Ensures the sidebar menu looks nice-->
+<ul class="layout-menu">
+        <template v-for="(item, i) in model" :key="item">
+            <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
+            <li v-if="item.separator" class="menu-separator"></li>
+        </template>
+    </ul>
+
+
+
 </template>
 
+<script setup>
+// Imports for Sidebar Menu
+import { ref } from 'vue';
+import AppMenu from '../layout/AppMenu.vue';
+
+// Menu Display Items
+const model = ref([
+    {
+        label: 'Home',
+        items: [
+            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
+            { label: 'Journal Entries', icon: 'pi pi-pencil', to: '/journal' },
+            {label: 'Goal Setting', icon: 'pi pi-fw pi-check-square', to: '/goals'}
+        ]
+    },
+    {
+        label: 'Pages',
+        icon: 'pi pi-fw pi-briefcase',
+        to: '/pages',
+        items: [
+            {
+                label: 'Landing',
+                icon: 'pi pi-fw pi-globe',
+                to: '/home'
+            },
+            {
+                label: 'Auth',
+                icon: 'pi pi-fw pi-user',
+                items: [
+                    {
+                        label: 'Login',
+                        icon: 'pi pi-fw pi-sign-in',
+                        to: '/auth/login'
+                    },
+                    {
+                        label: 'Error',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/auth/error'
+                    },
+                    {
+                        label: 'Access Denied',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/auth/access'
+                    }
+                ]
+            },
+        ]
+    },
+]);
+
+</script>
+
 <script>
+// Imports for background coloring
+// Imports for background color
+import { createApp } from 'vue';
+import App from '../App.vue';
+import router from '../router';
+import { definePreset } from '@primevue/themes';
+import Lara from '@primevue/themes/lara';
+import PrimeVue from 'primevue/config';
+import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
+
+import '@/assets/styles.scss';
+import '@/assets/tailwind.css';
+
 export default {
   data() {
     return {
@@ -170,6 +251,40 @@ export default {
     },
   },
 };
+
+const app = createApp(App);
+
+app.use(router);
+const MyPreset = definePreset(Lara, {
+    semantic: {
+        primary: {
+            50: '{violet.50}',
+            100: '{violet.100}',
+            200: '{violet.200}',
+            300: '{violet.300}',
+            400: '{violet.400}',
+            500: '{violet.500}',
+            600: '{violet.600}',
+            700: '{violet.700}',
+            800: '{violet.800}',
+            900: '{violet.900}',
+            950: '{violet.950}'
+        }
+    }
+});
+app.use(PrimeVue, {
+    theme: {
+        preset: MyPreset,
+        options: {
+            darkModeSelector: '.app-dark',
+            primaryColor: '#8b5cf6'
+        }
+    }
+});
+app.use(ToastService);
+app.use(ConfirmationService);
+
+app.mount('#app');
 </script>
 
 
@@ -179,8 +294,6 @@ export default {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-image: url('/src/assets/Background-2.jpg');
-  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
