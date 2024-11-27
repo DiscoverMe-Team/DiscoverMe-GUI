@@ -13,7 +13,7 @@
             <select id="mood-select" v-model="selectedMoodId" class="form-control">
               <option disabled value="">-- Choose a Mood --</option>
               <option v-for="mood in moods" :key="mood.id" :value="mood.id">
-                {{ mood.mood_type }}
+                {{ mood.mood_type }} {{ mood.emoji }}
               </option>
             </select>
           </div>

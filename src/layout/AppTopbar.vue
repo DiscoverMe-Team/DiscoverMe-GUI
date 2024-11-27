@@ -81,40 +81,12 @@ function logout() {
             <div class="relative">
                 <button
                     class="layout-topbar-action flex items-center gap-2"
-                    @click="toggleProfileMenu"
+                    @click="logout"
                     aria-haspopup="true"
                     :aria-expanded="showProfileMenu"
                 >
-                    <i class="pi pi-user"></i>
-                    <div class="profile-name">{{ user.username || 'User' }} </div>
+                    <i style="color: red;"class="pi pi-fw pi-sign-out"></i>
                 </button>
-                <div
-                    v-if="showProfileMenu"
-                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg sm:w-36"
-                    role="menu"
-                >
-                    <ul role="menuitem">
-                        <li>
-                            <router-link
-                                to="/settings"
-                                class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                active-class="bg-gray-200 dark:bg-gray-600"
-                            >
-                                <i class="pi pi-fw pi-cog"></i>
-                                Settings
-                            </router-link>
-                        </li>
-                        <li>
-                            <button
-                                @click="logout"
-                                class="block w-full text-left px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            >
-                                <i class="pi pi-fw pi-sign-out"></i>
-                                Logout
-                            </button>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
@@ -128,7 +100,7 @@ function logout() {
     padding: 0.5rem 1rem;
     background-color: var(--surface-card);
     border-bottom: 1px solid var(--surface-border);
-    flex-wrap: wrap; /* Allow elements to wrap if needed */
+    flex-wrap: wrap;
 }
 
 .layout-topbar-logo-container {

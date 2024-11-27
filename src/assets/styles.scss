@@ -126,6 +126,12 @@ body {
     color: #ffffff; /* Neutral color for location text */
 }
 
+.status-bar{
+    background-color: var(--primary-color, #8A2BE2);
+    border-radius: 10px; /* Rounded corners */
+    font-weight: bold;
+}
+
 @media (max-width: 768px) {
     .dashboard-header {
         flex-direction: column; /* Stack items vertically on small screens */

@@ -74,7 +74,7 @@ async function handleMoodSave(moodLog) {
         <div class="dashboard-header flex justify-between items-center mb-6">
         <!-- Greeting Section -->
         <div class="greeting text-2xl font-semibold text-white">
-            Hello, {{ user?.username || 'Guest' }}!
+            Hello, {{ user?.first_name || 'Guest' }}!
         </div>
 
         <!-- Weather Section -->
@@ -90,7 +90,7 @@ async function handleMoodSave(moodLog) {
     </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-        <div class="dashboard-card" @click="showSetMoodDialog = true">
+        <div class="dashboard-card" >
             <div class="dashboard-card-header">
                 <i class="pi pi-heart-fill"></i>
                 Current Mood
@@ -131,5 +131,5 @@ async function handleMoodSave(moodLog) {
             </div>
         </div>
     </div>
-    <SetMood v-if="showSetMoodDialog" @close="showSetMoodDialog = false" @save="handleMoodSave" />
+    
 </template>
