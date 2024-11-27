@@ -1,161 +1,3 @@
-<template>
-  <div class="layout-sidebar bg-surface-2">
-        <app-menu></app-menu>
-    </div>
-
-  <div class="app">
-    <div class="content">
-       <!-- Back Button Code -->
-      <button class="back-button" @click="navigateToDashboard">Back to Dashboard</button>
-
-      <h1>Goal Checklist</h1>
-
-      <!-- Goal Checklist Box -->
-      <div class="add-goal-container">
-        <input 
-          type="text" 
-          v-model="newGoal" 
-          placeholder="Enter a new goal you want to achieve." 
-        />
-        <button @click="addGoal">Add Goal</button>
-      </div>
-  
-      <!-- Warning Message - displayed when user tries to submit a goal with no text in the box -->
-      <p v-if="showWarning" class="warning-message">
-          You must enter a goal before you can add.
-      </p>
-
-      <!-- Message if No Goals Exist - this only displays while the goal list is empty -->
-      <div v-if="goals.length === 0">
-        <p>No goals to display yet!</p>
-      </div>
-
-      <!-- Goals Checklist Code - applies to each checklist item -->
-      <div v-for="(goal, goalIndex) in goals" :key="goalIndex" class="goal">
-        <div class="goal-header">
-          <input
-            type="text"
-            v-model="goal.text"
-            class="goal-title"
-            :disabled="!goal.editing"
-          />
-          <div class="checklist-actions">
-          <button @click="goal.editing = !goal.editing">
-            {{ goal.editing ? "Save" : "Edit" }} <!-- This prevents the need for two separate buttons. -->
-          </button>
-          <div class="action-gap1"></div>
-          <button @click="deleteGoal(goalIndex)">
-              Delete
-          </button>
-        </div>
-      </div>
-
-        <!-- Checklist Items -->
-        <div v-if="goal.checklist.length > 0" class="checklist">
-          <div
-            v-for="(item, itemIndex) in goal.checklist"
-            :key="itemIndex"
-            class="checklist-item"
-          >
-            <input 
-              type="checkbox" 
-              v-model="item.completed" 
-            />
-            <input
-              type="text"
-              v-model="item.text"
-              :disabled="!item.editing"
-              class="checklist-input"
-            />
-            <div class="checklist-actions">
-              <button @click="item.editing = !item.editing">
-                {{ item.editing ? "Save" : "Edit" }}
-              </button>
-              <div class="action-gap2"></div>
-              <button @click="deleteChecklistItem(goalIndex, itemIndex)">
-                  Delete
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add Checklist Item -->
-        <div class="add-checklist-item">
-          <input 
-            type="text" 
-            v-model="goal.newChecklistItem" 
-            placeholder="Create a task to achieve this goal."
-          />
-          <button @click="addChecklistItem(goalIndex)">Add</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<!--Ensures the sidebar menu looks nice-->
-<ul class="layout-menu">
-        <template v-for="(item, i) in model" :key="item">
-            <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
-            <li v-if="item.separator" class="menu-separator"></li>
-        </template>
-    </ul>
-
-
-
-</template>
-
-<script setup>
-// Imports for Sidebar Menu
-import { ref } from 'vue';
-import AppMenu from '../layout/AppMenu.vue';
-
-// Menu Display Items
-const model = ref([
-    {
-        label: 'Home',
-        items: [
-            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-            { label: 'Journal Entries', icon: 'pi pi-pencil', to: '/journal' },
-            {label: 'Goal Setting', icon: 'pi pi-fw pi-check-square', to: '/goals'}
-        ]
-    },
-    {
-        label: 'Pages',
-        icon: 'pi pi-fw pi-briefcase',
-        to: '/pages',
-        items: [
-            {
-                label: 'Landing',
-                icon: 'pi pi-fw pi-globe',
-                to: '/home'
-            },
-            {
-                label: 'Auth',
-                icon: 'pi pi-fw pi-user',
-                items: [
-                    {
-                        label: 'Login',
-                        icon: 'pi pi-fw pi-sign-in',
-                        to: '/auth/login'
-                    },
-                    {
-                        label: 'Error',
-                        icon: 'pi pi-fw pi-times-circle',
-                        to: '/auth/error'
-                    },
-                    {
-                        label: 'Access Denied',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/auth/access'
-                    }
-                ]
-            },
-        ]
-    },
-]);
-
-</script>
-
 <script>
 // Imports for background coloring
 // Imports for background color
@@ -285,39 +127,168 @@ app.use(ToastService);
 app.use(ConfirmationService);
 
 app.mount('#app');
+
+
+// Imports for Sidebar Menu
+import { ref } from 'vue';
+import AppMenu from '../layout/AppMenu.vue';
+
+
 </script>
 
+<template>
+  <div class="layout-sidebar bg-surface-2">
+        <app-menu></app-menu>
+    </div>
 
-<style>
+  <div class="app">
+    <div class="content">
+       <!-- Back Button Code -->
+       <Button label="Back to Dashboard" icon="pi pi-arrow-left" class="back-button" @click="navigateToDashboard" />
+
+      <h1>Goal Checklist</h1>
+
+      <!-- Goal Checklist Box -->
+      <div class="add-goal-container">
+        <input 
+          type="text" 
+          v-model="newGoal" 
+          placeholder="Enter a new goal you want to achieve." 
+        />
+        <Button class="small-button" @click="addGoal">Add Goal</button>
+      </div>
+  
+      <!-- Warning Message - displayed when user tries to submit a goal with no text in the box -->
+      <p v-if="showWarning" class="warning-message">
+          You must enter a goal before you can add.
+      </p>
+
+      <!-- Message if No Goals Exist - this only displays while the goal list is empty -->
+      <div v-if="goals.length === 0">
+        <p>No goals to display yet!</p>
+      </div>
+
+      <!-- Goals Checklist Code - applies to each checklist item -->
+      <div v-for="(goal, goalIndex) in goals" :key="goalIndex" class="goal">
+        <div class="goal-header">
+          <input
+            type="text"
+            v-model="goal.text"
+            class="goal-title"
+            :disabled="!goal.editing"
+          />
+          <div class="checklist-actions">
+          <Button class="small-button" @click="goal.editing = !goal.editing">
+            {{ goal.editing ? "Save" : "Edit" }} <!-- This prevents the need for two separate buttons. -->
+          </Button>
+          <div class="action-gap1"></div>
+          <Button class="small-button" @click="deleteGoal(goalIndex)">
+              Delete
+          </Button>
+        </div>
+      </div>
+
+        <!-- Checklist Items -->
+        <div v-if="goal.checklist.length > 0" class="checklist">
+          <div
+            v-for="(item, itemIndex) in goal.checklist"
+            :key="itemIndex"
+            class="checklist-item"
+          >
+            <input 
+              type="checkbox" 
+              v-model="item.completed" 
+            />
+            <input
+              type="text"
+              v-model="item.text"
+              :disabled="!item.editing"
+              class="checklist-input"
+            />
+            <div class="checklist-actions">
+              <Button class="small-button" @click="item.editing = !item.editing">
+                {{ item.editing ? "Save" : "Edit" }}
+              </Button>
+              <div class="action-gap2"></div>
+              <Button class="small-button" @click="deleteChecklistItem(goalIndex, itemIndex)">
+                  Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Checklist Item -->
+        <div class="add-checklist-item">
+          <input 
+            type="text" 
+            v-model="goal.newChecklistItem" 
+            placeholder="Create a task to achieve this goal."
+          />
+          <Button label="Add" class="small-button" @click="addChecklistItem(goalIndex)"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!--Ensures the sidebar menu looks nice-->
+<ul class="layout-menu">
+        <template v-for="(item, i) in model" :key="item">
+            <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
+            <li v-if="item.separator" class="menu-separator"></li>
+        </template>
+    </ul>
+
+
+</template>
+
+<style scoped>
+/* Back Button */
+
+.back-button:hover{
+  background-color: #611efd !important;
+  border: none !important;
+}
+
+.back-button {
+    background-color: #8b5cf6;
+    position: fixed; /* Keeps the button in place even when scrolling */
+    top: 0;          /* Aligns the button to the top edge */
+    left: 0;         /* Aligns the button to the left edge */
+    margin: 10px;    /* Adds some spacing from the edges */
+    z-index: 1000;   /* Ensures the button stays on top of other elements */
+    padding: 5px 10px; /* Smaller padding */
+    font-size: 14px; /* Smaller text size */
+    min-width: 150px; /* Set a smaller minimum width for buttons */
+    max-width: 180px; /* Set a maximum width for buttons */
+    border: none !important;  
+  }
+
+.small-button {
+  background-color: #8b5cf6;
+  padding: 6px 12px; /* Smaller padding */
+  font-size: 14px; /* Smaller text size */
+  min-width: 80px; /* Set a smaller minimum width for buttons */
+  max-width: 120px; /* Set a maximum width for buttons */
+  border: none !important;  
+
+}
+
+.small-button:hover{
+  background-color: #611efd !important;
+  border: none !important;  
+}
+
 /* Background */
 .app {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-position: center;
-  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
   font-family: Arial, sans-serif;
 }
-/* Back Button */
-  .back-button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      padding: 5px 10px;
-      background-color: #6200ea;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-  }
-  .back-button:hover {
-      background-color: #3700b3;
-  }
-
 
 /* Content Container */
 h1{
@@ -348,18 +319,6 @@ input[type="text"] {
   color: #333; /* Input box font color - this ensures the data entered is not white text*/
   border: 1px solid #ddd;
   border-radius: 5px;
-}
-
-button {
-  padding: 5px 10px;
-  cursor: pointer;
-  border: 2px solid blueviolet;
-  color: white; /* Button font color - this needs to be separate from the input box*/
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #3700b3;
 }
 
 /* Warning Message */
