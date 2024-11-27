@@ -1,15 +1,4 @@
 <script>
-// Imports for background coloring
-// Imports for background color
-import { createApp } from 'vue';
-import App from '../App.vue';
-import router from '../router';
-import { definePreset } from '@primevue/themes';
-import Lara from '@primevue/themes/lara';
-import PrimeVue from 'primevue/config';
-import ConfirmationService from 'primevue/confirmationservice';
-import ToastService from 'primevue/toastservice';
-
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
 
@@ -94,55 +83,71 @@ export default {
   },
 };
 
-const app = createApp(App);
-
-app.use(router);
-const MyPreset = definePreset(Lara, {
-    semantic: {
-        primary: {
-            50: '{violet.50}',
-            100: '{violet.100}',
-            200: '{violet.200}',
-            300: '{violet.300}',
-            400: '{violet.400}',
-            500: '{violet.500}',
-            600: '{violet.600}',
-            700: '{violet.700}',
-            800: '{violet.800}',
-            900: '{violet.900}',
-            950: '{violet.950}'
-        }
-    }
-});
-app.use(PrimeVue, {
-    theme: {
-        preset: MyPreset,
-        options: {
-            darkModeSelector: '.app-dark',
-            primaryColor: '#8b5cf6'
-        }
-    }
-});
-app.use(ToastService);
-app.use(ConfirmationService);
-
-app.mount('#app');
-
-
-// Imports for Sidebar Menu
+//Import for sidebar menu layout 
 import { ref } from 'vue';
-import AppMenu from '../layout/AppMenu.vue';
-
-
+import AppMenuItem from '../layout/AppMenuItem.vue';
+const model = ref([
+    {
+        label: 'Home',
+        items: [
+            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
+            { label: 'Journal Entries', icon: 'pi pi-pencil', to: '/journal' },
+            {label: 'Goal Setting', icon: 'pi pi-fw pi-check-square', to: '/goals'}
+        ]
+    },
+    {
+        label: 'Pages',
+        icon: 'pi pi-fw pi-briefcase',
+        to: '/pages',
+        items: [
+            {
+                label: 'Landing',
+                icon: 'pi pi-fw pi-globe',
+                to: '/home'
+            },
+            {
+                label: 'Auth',
+                icon: 'pi pi-fw pi-user',
+                items: [
+                    {
+                        label: 'Login',
+                        icon: 'pi pi-fw pi-sign-in',
+                        to: '/auth/login'
+                    },
+                    {
+                        label: 'Error',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/auth/error'
+                    },
+                    {
+                        label: 'Access Denied',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/auth/access'
+                    }
+                ]
+            },
+        ]
+    },
+    
+]);
 </script>
 
 <template>
-  <div class="layout-sidebar bg-surface-2">
+  <div scroll="no" class="goals-application">
+    <div class="content">
+      <div class="layout-sidebar bg-surface-2">
         <app-menu></app-menu>
     </div>
 
-  <div class="app">
-    <div class="content">
+    <!--Ensures the sidebar menu looks nice-->
+  <ul class="layout-menu">
+        <template v-for="(item, i) in model" :key="item">
+            <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
+            <li v-if="item.separator" class="menu-separator"></li>
+        </template>
+    </ul>
+
+      
        <!-- Back Button Code -->
        <Button label="Back to Dashboard" icon="pi pi-arrow-left" class="back-button" @click="navigateToDashboard" />
 
@@ -178,11 +183,11 @@ import AppMenu from '../layout/AppMenu.vue';
             :disabled="!goal.editing"
           />
           <div class="checklist-actions">
-          <Button class="small-button" @click="goal.editing = !goal.editing">
+          <Button class="smaller-button" @click="goal.editing = !goal.editing">
             {{ goal.editing ? "Save" : "Edit" }} <!-- This prevents the need for two separate buttons. -->
           </Button>
           <div class="action-gap1"></div>
-          <Button class="small-button" @click="deleteGoal(goalIndex)">
+          <Button class="smaller-button" @click="deleteGoal(goalIndex)">
               Delete
           </Button>
         </div>
@@ -206,11 +211,11 @@ import AppMenu from '../layout/AppMenu.vue';
               class="checklist-input"
             />
             <div class="checklist-actions">
-              <Button class="small-button" @click="item.editing = !item.editing">
+              <Button class="smaller-button" @click="item.editing = !item.editing">
                 {{ item.editing ? "Save" : "Edit" }}
               </Button>
               <div class="action-gap2"></div>
-              <Button class="small-button" @click="deleteChecklistItem(goalIndex, itemIndex)">
+              <Button class="smaller-button" @click="deleteChecklistItem(goalIndex, itemIndex)">
                   Delete
               </Button>
             </div>
@@ -224,22 +229,15 @@ import AppMenu from '../layout/AppMenu.vue';
             v-model="goal.newChecklistItem" 
             placeholder="Create a task to achieve this goal."
           />
-          <Button label="Add" class="small-button" @click="addChecklistItem(goalIndex)"/>
+          <Button label="Add" class="smaller-button" @click="addChecklistItem(goalIndex)"/>
         </div>
       </div>
     </div>
   </div>
-
-<!--Ensures the sidebar menu looks nice-->
-<ul class="layout-menu">
-        <template v-for="(item, i) in model" :key="item">
-            <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
-            <li v-if="item.separator" class="menu-separator"></li>
-        </template>
-    </ul>
-
-
 </template>
+
+
+
 
 <style scoped>
 /* Back Button */
@@ -252,8 +250,8 @@ import AppMenu from '../layout/AppMenu.vue';
 .back-button {
     background-color: #8b5cf6;
     position: fixed; /* Keeps the button in place even when scrolling */
-    top: 0;          /* Aligns the button to the top edge */
-    left: 0;         /* Aligns the button to the left edge */
+    bottom: 0;          /* Aligns the button to the top edge */
+    right: 0;         /* Aligns the button to the left edge */
     margin: 10px;    /* Adds some spacing from the edges */
     z-index: 1000;   /* Ensures the button stays on top of other elements */
     padding: 5px 10px; /* Smaller padding */
@@ -278,8 +276,24 @@ import AppMenu from '../layout/AppMenu.vue';
   border: none !important;  
 }
 
+.smaller-button{
+  background-color: #8b5cf6;
+  padding: 6px 12px; /* Smaller padding */
+  font-size: 14px; /* Smaller text size */
+  min-width: 50px; /* Set a smaller minimum width for buttons */
+  max-width: 90px; /* Set a maximum width for buttons */
+  border: none !important;  
+
+}
+
+.smaller-button:hover{
+  background-color: #611efd !important;
+  border: none !important;  
+}
+
 /* Background */
-.app {
+.goals-application {
+  overflow-y: hidden !important;
   margin: 0;
   padding: 0;
   min-height: 100vh;
