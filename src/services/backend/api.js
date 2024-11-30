@@ -2,10 +2,10 @@ import axios from 'axios';
 import { getAccessToken, getRefreshToken, saveTokens, destroyTokens, hasRefreshToken } from './auth';
 
 const api = axios.create({
-    baseURL:  import.meta.env.API_BASE_URL || 'http://localhost:8000/api',
+    baseURL: import.meta.env.API_BASE_URL || 'http://localhost:8000/api',
     headers: {
-        'Content-Type': 'application/json'
-    }
+        'Content-Type': 'application/json',
+    },
 });
 
 // Attach the JWT access token to every request
@@ -34,7 +34,7 @@ api.interceptors.response.use(
             try {
                 // Attempt to refresh the access token
                 const response = await axios.post(`${api.defaults.baseURL}/token/refresh/`, {
-                    refresh: refreshToken
+                    refresh: refreshToken,
                 });
 
                 const { access } = response.data;
@@ -59,7 +59,13 @@ api.interceptors.response.use(
     }
 );
 
+// Authentication API calls
 export const login = (data) => api.post('/token/', data);
 export const register = (data) => api.post('/register/', data);
+export const changePassword = (data) => api.post('/auth/change-password/', data);
+
+// User-related API calls
+export const getUserInfo = () => api.get('/user-info/');
+export const updateUserDetails = (data) => api.put('/auth/update-user/', data);
 
 export default api;
