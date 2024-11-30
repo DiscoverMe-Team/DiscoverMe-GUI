@@ -2,18 +2,34 @@
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { login } from '@/services/backend/api';
 import { saveTokens } from '@/services/backend/auth';
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const username = ref('');
 const password = ref('');
 const checked = ref(false);
 const errorMessage = ref('');
+const usernameError = ref(false);
+const passwordError = ref(false);
 const router = useRouter();
 
 const handleLogin = async () => {
     errorMessage.value = '';
+    usernameError.value = false;
+    passwordError.value = false;
 
+    // Validation for empty fields
+    if (!username.value) {
+        usernameError.value = true;
+    }
+    if (!password.value) {
+        passwordError.value = true;
+    }
+
+    if (usernameError.value || passwordError.value) {
+        errorMessage.value = 'Both username and password are required.';
+        return;
+    }
     try {
         // Send login request to the backend
         const response = await login({
@@ -35,11 +51,12 @@ const handleLogin = async () => {
         console.error('Login error:', error);
     }
 };
+
 </script>
 
 <template>
     <div class=" bg-gradient bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
-        <div class="flex flex-col items-center justify-center">
+        <div class="flex flex-col items-center justify-center" >
             <div
                 style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)"
             >
@@ -47,7 +64,7 @@ const handleLogin = async () => {
                     <!-- Center Logo -->
                     <div class="flex flex-col items-center text-center mb-8">
                         <img
-                            :src="isDarkTheme ? '/logo.png' : '/logo.png'"
+                                :src="isDarkTheme ? '/logo.png' : '/logo.png'"
                             alt="DiscoverMe Logo"
                             class="h-20 w-auto mb-4"
                             style="max-width: 70px;"
@@ -59,10 +76,10 @@ const handleLogin = async () => {
                     <!-- Form -->
                     <div>
                         <label for="username1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Username</label>
-                        <InputText id="username1" type="text" placeholder="Username" class="w-full md:w-[30rem] mb-8" v-model="username" />
+                        <InputText @keydown.enter="handleLogin" id="username1" type="text" placeholder="Username" class="w-full md:w-[30rem] mb-8" v-model="username" :invalid="usernameError" />
 
                         <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                        <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <Password @keydown.enter="handleLogin" id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false" :invalid="passwordError"></Password>
 
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                             <div class="flex items-center">
@@ -74,7 +91,7 @@ const handleLogin = async () => {
                             </router-link>
                         </div>
 
-                        <Button label="Sign In" class="w-full" @click="handleLogin"></Button>
+                        <Button label="Sign In" class="w-full"  @click="handleLogin"></Button>
                         <p v-if="errorMessage" class="text-red-500 mt-4">{{ errorMessage }}</p>
                     </div>
                 </div>
