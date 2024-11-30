@@ -57,6 +57,7 @@ onMounted(() => {
 .profile{
     margin-bottom: 30px;
     text-align: center;
+    
 }
 
 .profile img{
@@ -70,11 +71,16 @@ onMounted(() => {
 .profile h3{
     color: #000000;
     margin: 10px 0 5px;
+    font-weight: 700;
 }
 
 .profile p{
     color: rgb(251, 251, 255);
     font-size: 14px;
+}
+
+.status-bar{
+    cursor: pointer;
 }
 
 </style>

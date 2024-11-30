@@ -90,7 +90,20 @@ body {
     color: var(--primary-color-light, #A779E9); /* Light shade for icons */
     margin-bottom: 1rem;
 }
+/* Add icon styling */
+.dashboard-card-header .add-icon {
+    font-size: 1.25rem;
+    color: greenyellow;
+    opacity: 0; /* Hidden by default */
+    cursor: pointer;
+    float: right;
+    transition: opacity 0.2s ease-in-out; /* Smooth fade-in effect */
+}
 
+/* Show the icon on hover */
+.dashboard-card:hover .add-icon {
+    opacity: 1; /* Fully visible on hover */
+}
 .greeting{
     color: var(--text-color-secondary, #A779E9);
 }
