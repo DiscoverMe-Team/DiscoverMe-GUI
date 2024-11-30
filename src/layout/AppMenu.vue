@@ -13,35 +13,30 @@ const model = ref([
         ]
     },
     {
-        label: 'Pages',
+        label: 'Settings',
         icon: 'pi pi-fw pi-briefcase',
         to: '/pages',
         items: [
             {
-                label: 'Landing',
-                icon: 'pi pi-fw pi-globe',
-                to: '/home'
-            },
-            {
-                label: 'Auth',
+                label: 'Account Management',
                 icon: 'pi pi-fw pi-user',
                 items: [
                     {
-                        label: 'Login',
-                        icon: 'pi pi-fw pi-sign-in',
-                        to: '/auth/login'
+                        label: 'Change Information',
+                        icon: 'pi pi-fw pi-info',
+                        to: '/auth/updateinfo'
                     },
                     {
-                        label: 'Error',
-                        icon: 'pi pi-fw pi-times-circle',
-                        to: '/auth/error'
-                    },
-                    {
-                        label: 'Access Denied',
+                        label: 'Change Password',
                         icon: 'pi pi-fw pi-lock',
-                        to: '/auth/access'
-                    }
+                        to: '/auth/changepassword'
+                    },
                 ]
+            },
+            {
+                label: 'E-mail Preferences',
+                icon: 'pi pi-fw pi-envelope',
+                to: '/pages/crud'
             },
         ]
     },

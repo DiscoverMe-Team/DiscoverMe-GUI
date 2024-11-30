@@ -114,7 +114,17 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
-                }
+                },
+                {
+                    path: '/auth/changepassword',
+                    name: 'changepassword',
+                    component: () => import('@/views/pages/auth/ChangePassword.vue')
+                },
+                {
+                    path: '/auth/updateinfo',
+                    name: 'updateinfo',
+                    component: () => import('@/views/pages/auth/UpdateInfo.vue')
+                },
             ]
         },
         {
