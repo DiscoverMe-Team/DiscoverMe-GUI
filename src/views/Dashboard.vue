@@ -101,7 +101,6 @@ onMounted(async () => {
                 <span v-else>Hello, {{ user?.first_name || 'Guest' }}!</span>
             </div>
 
-
             <!-- Weather Section -->
             <div class="weather-info flex items-center gap-4 p-4">
                 <div class="icon">
