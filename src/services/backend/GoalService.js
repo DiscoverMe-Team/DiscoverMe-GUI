@@ -14,12 +14,13 @@ export const getGoalById = async (id) => {
 };
 
 export const createGoal = async (data) => {
+    console.log("Goal data being sent to API:", data);
     const response = await api.post('/goals/', data);
     return mapToGoal(response.data);
 };
 
 export const updateGoal = async (id, data) => {
-    const response = await api.put(`/goals/${id}/`, data);
+    const response = await api.patch(`/goals/${id}/`, data);
     return mapToGoal(response.data);
 };
 

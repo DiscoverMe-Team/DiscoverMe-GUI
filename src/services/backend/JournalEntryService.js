@@ -16,6 +16,7 @@ export const getJournalEntryById = async (id) => {
 };
 
 export const createJournalEntry = async (data) => {
+    console.log("Journal data being sent to API:", data);
     const response = await api.post('/journalentries/', data);
     return mapToJournalEntry(response.data);
 };

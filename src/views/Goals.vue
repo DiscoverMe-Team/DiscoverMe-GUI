@@ -11,52 +11,66 @@
           <input type="text" v-model="newGoal" placeholder="Enter a new goal" />
           <button class="goal-button" @click="addGoal">Add Goal</button>
         </div>
-        <div class="action-gap2"></div>
-        <p v-if="showWarning" class="warning-message">You must enter a goal before adding anything to the list.</p>
+        <p v-if="showWarning" class="warning-message">
+          You must enter a goal before adding anything to the list.
+        </p>
 
         <!-- Display Goals -->
         <div v-if="goals.length > 0" class="goals">
-          <div v-for="(goal, goalIndex) in goals" :key="goalIndex" class="goal">
-            <div class="action-gap2"></div>
-            <span class="goal-separator">******************************************************************************************************************</span>
+          <div v-for="goal in goals" :key="goal.id" class="goal">
             <div class="goal-header">
-              <input class="my-checkbox" type="checkbox" @change="markGoalAsCompleted(goalIndex)" />
+              <input
+                class="my-checkbox"
+                type="checkbox"
+                v-model="goal.completed"
+                @change="updateGoal(goal.id, { completed: goal.completed })"
+              />
               <input
                 type="text"
-                v-model="goal.text"
+                v-model="goal.title"
                 class="goal-title"
                 :disabled="!goal.editing"
               />
-              <button class="small-button" @click="goal.editing = !goal.editing">
-                  {{ goal.editing ? "Save" : "Edit" }}
-                </button>
-                <div class="action-gap1"></div>
-                <button class="delete-goal-button" @click="deleteGoal(goalIndex)">Delete</button>
-              <div class="action-gap2"></div>
+              <button class="small-button" @click="toggleGoalEdit(goal)">
+                {{ goal.editing ? "Save" : "Edit" }}
+              </button>
+              <button class="delete-goal-button" @click="deleteGoal(goal.id)">
+                Delete
+              </button>
             </div>
 
             <!-- Task List -->
-            <div v-if="goal.task.length > 0" class="task-list">
-              <div v-for="(item, itemIndex) in goal.task" :key="itemIndex" class="task-item">
-                <input class="my-checkbox" type="checkbox" v-model="item.completed" />
-                <input type="text" v-model="item.text" class="task-input" :disabled="!item.editing" />
-                <button class="smaller-button" @click="item.editing = !item.editing">
-                    {{ item.editing ? "Save" : "Edit" }}
-                  </button>
-                  <div class="action-gap1"></div>
-                  <button class="delete-task-button"  @click="deleteTaskItem(goalIndex, itemIndex)">Delete</button>
-                  <div class="action-gap2"></div>
+            <div class="task-list">
+              <div v-for="task in goal.tasks" :key="task.id" class="task-item">
+                <input
+                  class="my-checkbox"
+                  type="checkbox"
+                  v-model="task.completed"
+                  @change="updateTask(task.id, { completed: task.completed })"
+                />
+                <input
+                  type="text"
+                  v-model="task.text"
+                  class="task-input"
+                  :disabled="!task.editing"
+                />
+                <button class="smaller-button" @click="toggleTaskEdit(task)">
+                  {{ task.editing ? "Save" : "Edit" }}
+                </button>
+                <button class="delete-task-button" @click="deleteTask(task.id)">
+                  Delete
+                </button>
               </div>
-            </div>
-
-            <!-- Add Task Item -->
-            <div class="add-task-item">
-              <input
-                type="text"
-                v-model="goal.newTaskItem"
-                placeholder="Add a task for this goal"
-              />
-              <button class="task-button" @click="addTaskItem(goalIndex)">Add Task</button>
+              <div class="add-task-item">
+                <input
+                  type="text"
+                  v-model="goal.newTask"
+                  placeholder="Add a task for this goal"
+                />
+                <button class="task-button" @click="addTask(goal.id, goal.newTask)">
+                  Add Task
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -67,23 +81,10 @@
       <div class="right-column">
         <h1>Completed Goals</h1>
         <div v-if="completedGoals.length > 0" class="completed-goals">
-          <div
-            v-for="(completed, index) in completedGoals"
-            :key="index"
-            class="completed-goal"
-          >
-            <div @click="toggleTaskDisplay(index)">
-              <p>
-                <strong>{{ completed.text }}</strong>
-                <span> - Completed on {{ completed.timestamp }}</span>
-              </p>
-            </div>
-            <ul v-if="completed.showTasks" class="completed-tasks">
-              <li v-for="(task, i) in completed.task" :key="i">{{ task.text }}</li>
-            </ul>
-            <button class="right-delete-button" @click="deleteCompletedGoal(index)">Delete</button>
-            <div class="action-gap1"></div>
-
+          <div v-for="goal in completedGoals" :key="goal.id" class="completed-goal">
+            <p>
+              <strong>{{ goal.title }}</strong> - Completed on {{ goal.completed_at }}
+            </p>
           </div>
         </div>
         <p v-else>No completed goals yet!</p>
@@ -93,83 +94,123 @@
 </template>
 
 <script>
+import {
+  getGoals,
+  createGoal,
+  updateGoal,
+  deleteGoal,
+} from "@/services/backend/GoalService";
+import {
+  getTasksByGoal,
+  createTask,
+  updateTask,
+  deleteTask,
+} from "@/services/backend/TaskService";
+
 export default {
   data() {
     return {
       newGoal: "",
-      goals: this.loadGoalsFromLocalStorage(),
-      completedGoals: this.loadCompletedGoalsFromLocalStorage(),
+      goals: [],
+      completedGoals: [],
       showWarning: false,
     };
   },
   methods: {
-    navigateToDashboard() {
-      this.$router.push("/");
+    async fetchGoals() {
+      try {
+        const goals = await getGoals();
+        for (const goal of goals) {
+          goal.tasks = await getTasksByGoal(goal.id);
+          goal.newTask = "";
+          goal.editing = false;
+        }
+        this.goals = goals.filter((goal) => !goal.completed);
+        this.completedGoals = goals.filter((goal) => goal.completed);
+      } catch (error) {
+        console.error("Error fetching goals:", error);
+      }
     },
-    addGoal() {
-      if (this.newGoal.trim() === "") {
+    async addGoal() {
+      if (!this.newGoal.trim()) {
         this.showWarning = true;
         setTimeout(() => (this.showWarning = false), 3000);
         return;
       }
-      this.goals.push({
-        text: this.newGoal,
-        editing: false,
-        task: [],
-        newTaskItem: "",
-      });
-      this.newGoal = "";
-      this.saveGoalsToLocalStorage();
+      try {
+        alert(this.newGoal)
+        const goal = await createGoal({ title: this.newGoal, description: "" });
+        goal.tasks = [];
+        goal.newTask = "";
+        goal.editing = false;
+        this.goals.push(goal);
+        this.newGoal = "";
+      } catch (error) {
+        console.error("Error adding goal:", error);
+      }
     },
-    deleteGoal(index) {
-      this.goals.splice(index, 1);
-      this.saveGoalsToLocalStorage();
+    async updateGoal(id, data) {
+      try {
+        await updateGoal(id, data);
+        await this.fetchGoals(); // Refresh the goals
+      } catch (error) {
+        console.error("Error updating goal:", error);
+      }
     },
-    addTaskItem(goalIndex) {
-      const goal = this.goals[goalIndex];
-      if (goal.newTaskItem.trim() === "") return;
-      goal.task.push({ text: goal.newTaskItem, completed: false, editing: false });
-      goal.newTaskItem = "";
-      this.saveGoalsToLocalStorage();
+    async deleteGoal(id) {
+      try {
+        await deleteGoal(id);
+        this.goals = this.goals.filter((goal) => goal.id !== id);
+      } catch (error) {
+        console.error("Error deleting goal:", error);
+      }
     },
-    deleteTaskItem(goalIndex, itemIndex) {
-      this.goals[goalIndex].task.splice(itemIndex, 1);
-      this.saveGoalsToLocalStorage();
+    async addTask(goalId, text) {
+      if (!text.trim()) return;
+      try {
+        const task = await createTask({ goal: goalId, text });
+        const goal = this.goals.find((goal) => goal.id === goalId);
+        goal.tasks.push(task);
+        goal.newTask = "";
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
     },
-    markGoalAsCompleted(index) {
-      const goal = this.goals.splice(index, 1)[0];
-      this.completedGoals.push({
-        ...goal,
-        timestamp: new Date().toLocaleString(),
-        showTasks: false,
-      });
-      this.saveGoalsToLocalStorage();
-      this.saveCompletedGoalsToLocalStorage();
+    async updateTask(id, data) {
+      try {
+        await updateTask(id, data);
+        await this.fetchGoals(); // Refresh the goals
+      } catch (error) {
+        console.error("Error updating task:", error);
+      }
     },
-    toggleTaskDisplay(index) {
-      this.completedGoals[index].showTasks = !this.completedGoals[index].showTasks;
+    async deleteTask(id) {
+      try {
+        await deleteTask(id);
+        await this.fetchGoals(); // Refresh the goals
+      } catch (error) {
+        console.error("Error deleting task:", error);
+      }
     },
-    deleteCompletedGoal(index) {
-      this.completedGoals.splice(index, 1);
-      this.saveCompletedGoalsToLocalStorage();
+    toggleGoalEdit(goal) {
+      if (goal.editing) {
+        this.updateGoal(goal.id, { title: goal.title });
+      }
+      goal.editing = !goal.editing;
     },
-    saveGoalsToLocalStorage() {
-      localStorage.setItem("goals", JSON.stringify(this.goals));
+    toggleTaskEdit(task) {
+      if (task.editing) {
+        this.updateTask(task.id, { text: task.text });
+      }
+      task.editing = !task.editing;
     },
-    loadGoalsFromLocalStorage() {
-      const storedGoals = localStorage.getItem("goals");
-      return storedGoals ? JSON.parse(storedGoals) : [];
-    },
-    saveCompletedGoalsToLocalStorage() {
-      localStorage.setItem("completedGoals", JSON.stringify(this.completedGoals));
-    },
-    loadCompletedGoalsFromLocalStorage() {
-      const storedCompletedGoals = localStorage.getItem("completedGoals");
-      return storedCompletedGoals ? JSON.parse(storedCompletedGoals) : [];
-    },
+  },
+  async mounted() {
+    await this.fetchGoals();
   },
 };
 </script>
+
 
 <style scoped>
 .my-checkbox{
