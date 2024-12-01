@@ -21,6 +21,11 @@ const router = createRouter({
                     component: () => import('@/views/JournalEntry.vue')
                 },
                 {
+                    path: '/goals',
+                    name: 'goals',
+                    component: () => import('@/views/Goals.vue')
+                },
+                {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
                     component: () => import('@/views/uikit/FormLayout.vue')
@@ -109,7 +114,17 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
-                }
+                },
+                {
+                    path: '/auth/changepassword',
+                    name: 'changepassword',
+                    component: () => import('@/views/pages/auth/ChangePassword.vue')
+                },
+                {
+                    path: '/auth/updateinfo',
+                    name: 'updateinfo',
+                    component: () => import('@/views/pages/auth/UpdateInfo.vue')
+                },
             ]
         },
         {
@@ -143,13 +158,6 @@ const router = createRouter({
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
         },
-
-        {
-            path: '/goals',
-            name: 'goals',
-            component: () => import('@/views/Goals.vue')
-        },
-
         // Catch-all route for undefined paths
         {
             path: '/:pathMatch(.*)*',
