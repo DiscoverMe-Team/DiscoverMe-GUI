@@ -1,13 +1,13 @@
 <script setup>
 
-import { ref, onMounted } from 'vue';
-import { getMoods, getMoodById } from '@/services/backend/MoodService';
-import { getMoodLogs } from '@/services/backend/MoodLogService';
-import { getJournalEntries } from '@/services/backend/JournalEntryService';
+import SetMood from '@/components/SetMood.vue'; // Import the SetMood component
+import { useUser } from '@/layout/composables/useUser';
 import { getGoals } from '@/services/backend/GoalService';
 import { getInsights } from '@/services/backend/InsightService';
-import { useUser } from '@/layout/composables/useUser';
-import SetMood from '@/components/SetMood.vue'; // Import the SetMood component
+import { getJournalEntries } from '@/services/backend/JournalEntryService';
+import { getMoodLogs } from '@/services/backend/MoodLogService';
+import { getMoodById, getMoods } from '@/services/backend/MoodService';
+import { onMounted, ref } from 'vue';
 
 
 // Dashboard data
@@ -103,7 +103,7 @@ async function handleMoodSave(moodLog) {
             </div>
         </div>
 
-        <div class="dashboard-card">
+        <div class="dashboard-card" @click="$router.push('/journal')" style="cursor: pointer;" title="Click to view all journal entries">
             <div class="dashboard-card-header">
                 <i class="pi pi-pencil"></i>
                 Recent Journal Entries

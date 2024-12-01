@@ -1,5 +1,4 @@
 <script>
-import { JournalEntry } from '@/models/JournalEntry';
 import { createJournalEntry, deleteJournalEntry, getJournalEntries } from '@/services/backend/JournalEntryService';
 import { onMounted, ref } from 'vue';
 export default {
@@ -10,12 +9,22 @@ export default {
         const isFormVisible = ref(false); // Controls the visibility of the journal entry form
         const isSaved = ref(false); // Flag to show confirmation message after saving
         const editingEntry = ref(null); // The entry that is being edited
-        const isDeleteConfirmationVisible = ref(false); // Flag for showing delete confirmation
+        const deleteSuccessMessage = ref(''); //Store deletion success message
 
         const fetchEntries = async () => {
             try {
                 const journalEntriesResponse = await getJournalEntries();
-                savedEntries.value = journalEntriesResponse || [];
+                // Format the dates to display locally with only hour, minutes, and date
+                savedEntries.value =
+                    journalEntriesResponse.map((entry) => {
+                        const entryDate = new Date(entry.created_at); // Convert to Date object
+                        const formattedTime = entryDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const formattedDate = entryDate.toLocaleDateString();
+                        return {
+                            ...entry,
+                            created_at: `${formattedDate} ${formattedTime}` // Reformat the created_at field
+                        };
+                    }) || [];
             } catch (error) {
                 errorMessage.value = 'Error fetching data. Please try again later.';
                 console.error('Data Fetch Error:', error);
@@ -23,59 +32,76 @@ export default {
         };
 
         // Method to save the journal entry
-        const saveEntry = () => {
+        const saveEntry = async () => {
             if (title.value && entry.value) {
-                const currentTime = new Date();
-                const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format time to exclude seconds
-                const formattedDate = currentTime.toLocaleDateString(); // Get the date separately
-                new JournalEntry();
-                const newEntry = {
-                    title: title.value,
-                    content: entry.value,
-                    created_at: `${formattedDate} ${formattedTime}` // Combine date and formatted time
-                };
+                try {
+                    const currentTime = new Date();
+                    const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const formattedDate = currentTime.toLocaleDateString();
+                    const newEntry = {
+                        title: title.value,
+                        content: entry.value,
+                        created_at: `${formattedDate} ${formattedTime}`
+                    };
 
-                // If we're editing an existing entry, replace it
-                if (editingEntry.value !== null) {
-                    savedEntries[editingEntry] = newEntry;
-                } else {
-                    // Otherwise, add it as a new entry
-                    createJournalEntry(newEntry);
+                    if (editingEntry.value !== null) {
+                        // Update an existing entry
+                        await createJournalEntry({ ...editingEntry.value, ...newEntry });
+                    } else {
+                        // Create a new entry
+                        await createJournalEntry(newEntry);
+                    }
+
+                    // Refresh the entries list
+                    await fetchEntries();
+
+                    // Clear the form and reset the state
+                    clearFields();
+                    isFormVisible.value = false;
+                    editingEntry.value = null;
+
+                    // Show success message
+                    isSaved.value = true;
+
+                    // Hide the success message after 3 seconds
+                    setTimeout(() => {
+                        isSaved.value = false;
+                    }, 3000);
+                } catch (error) {
+                    console.error('Error saving entry:', error);
+                    alert('Failed to save the entry. Please try again.');
                 }
-
-                // Save entries to localStorage to persist across page reloads
-                localStorage.setItem('savedEntries', JSON.stringify(savedEntries));
-
-                clearFields(); // Optionally clear the fields after saving
-                isSaved = true; // Show the confirmation message
-                setTimeout(() => {
-                    isSaved = false; // Hide the confirmation after 3 seconds
-                }, 3000);
-                isFormVisible.value = false; // Hide the form after saving
-                editingEntry.value = null; // Reset editing entry
             } else {
                 alert('Please provide both a title and an entry!');
             }
         };
 
         // Method to delete the current journal entry (reset fields)
-        const deleteEntry = () => {
+        const deleteEntry = async () => {
             if (editingEntry.value !== null) {
-                // Remove the entry from the array
-                deleteJournalEntry(editingEntry.value.id);
+                try {
+                    // Remove the entry from the backend
+                    await deleteJournalEntry(editingEntry.value.id);
 
-                // Clear the form, reset state, and navigate back
-                clearFields();
-                isFormVisible.value = false;
-                editingEntry.value = null;
+                    // Refresh the entries list
+                    await fetchEntries();
 
-                // Hide confirmation
-                isDeleteConfirmationVisible.value = false;
+                    // Clear the form and reset the state
+                    clearFields();
+                    isFormVisible.value = false;
+                    editingEntry.value = null;
 
-                // Provide user feedback
-                $nextTick(() => {
-                    alert('Entry deleted successfully!');
-                });
+                    // Set success message
+                    deleteSuccessMessage.value = 'Entry deleted successfully!';
+
+                    // Hide the success message after 3 seconds
+                    setTimeout(() => {
+                        deleteSuccessMessage.value = '';
+                    }, 3000);
+                } catch (error) {
+                    console.error('Error deleting entry:', error);
+                    alert('Failed to delete the entry. Please try again.');
+                }
             }
         };
 
@@ -130,74 +156,104 @@ export default {
             showForm,
             goBack,
             cancelEntry,
-            savedEntries
+            savedEntries,
+            deleteSuccessMessage
         };
     }
 };
 </script>
 
 <template>
-    <Fluid>
-        <div class="flex mt-8">
-            <div class="card flex flex-col gap-4 w-full flex-grow">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl font-bold">Journal Entries</h1>
-                    <div class="flex gap-4">
-                        <Button v-if="!isFormVisible" label="Create Entry" icon="pi pi-plus" class="large-button" @click="showForm" />
-                        <Button v-if="isFormVisible" label="Back to Entries" icon="pi pi-arrow-left" class="large-button" @click="goBack" />
-                    </div>
-                </div>
-
-                <!-- Conditionally Render the Form or the Saved Entries List -->
-                <div v-if="isFormVisible" class="mt-6">
-                    <!-- Journal Entry Form -->
-                    <h2 class="text-2xl mb-4">Create New Entry</h2>
-
-                    <div class="flex flex-col gap-2">
-                        <label for="title">Title</label>
-                        <InputText id="title" type="text" class="title-input" v-model="title" />
+    <div class="app">
+        <Fluid>
+            <div class="flex mt-8">
+                <div class="card flex flex-col gap-4 w-full flex-grow">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-4xl font-bold">Journal Entries</h1>
+                        <div class="flex gap-4">
+                            <Button v-if="!isFormVisible" label="Create Entry" icon="pi pi-plus" class="large-button" @click="showForm" />
+                            <Button v-if="isFormVisible" label="Back to Entries" icon="pi pi-arrow-left" class="large-button" @click="goBack" />
+                        </div>
                     </div>
 
-                    <div class="flex flex-wrap">
-                        <label for="entry">Entry</label>
-                        <Textarea id="entry" rows="5" v-model="entry" />
+                    <!-- Conditionally Render the Form or the Saved Entries List -->
+                    <div v-if="isFormVisible" class="mt-6">
+                        <!-- Journal Entry Form -->
+                        <h2 class="text-2xl mb-4">Create New Entry</h2>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="title">Title</label>
+                            <InputText id="title" type="text" class="title-input" v-model="title" />
+                        </div>
+
+                        <div class="flex flex-wrap">
+                            <label for="entry">Entry</label>
+                            <Textarea id="entry" rows="5" v-model="entry" />
+                        </div>
+
+                        <div class="flex gap-4 mt-4">
+                            <Button label="Save" icon="pi pi-check" class="small-button" @click="saveEntry" />
+                            <Button label="Delete" icon="pi pi-trash" class="small-button" @click="deleteEntry" />
+                            <Button label="Cancel" icon="pi pi-times" class="small-button" @click="cancelEntry" />
+                        </div>
                     </div>
 
-                    <div class="flex gap-4 mt-4">
-                        <Button label="Save" icon="pi pi-check" class="small-button" @click="saveEntry" />
-                        <Button label="Delete" icon="pi pi-trash" class="small-button" @click="deleteEntry" />
-                        <Button label="Cancel" icon="pi pi-times" class="small-button" @click="cancelEntry" />
+                    <!-- Entry saved confirmation -->
+                    <div v-if="isSaved && !isFormVisible" class="mt-4">
+                        <p class="text-green-500">Entry saved successfully!</p>
                     </div>
-                </div>
 
-                <!-- Entry saved confirmation -->
-                <div v-if="isSaved && !isFormVisible" class="mt-4">
-                    <p class="text-green-500">Entry saved successfully!</p>
-                </div>
+                    <div v-if="deleteSuccessMessage && !isFormVisible" class="mt-4">
+                        <p class="text-green-500">{{ deleteSuccessMessage }}</p>
+                    </div>
 
-                <!-- Display saved journal entries by default -->
-                <div v-if="!isFormVisible && savedEntries.length" class="mt-6">
-                    <h2 class="text-2xl">History:</h2>
-                    <ul>
-                        <li v-for="(entry, index) in savedEntries" :key="index">
-                            <a href="#" @click.prevent="editEntry(index)" class="entry-link">
-                                <strong>{{ entry.title }}</strong> - {{ entry.created_at }}
-                            </a>
-                        </li>
-                    </ul>
+                    <!-- Display saved journal entries by default -->
+                    <div v-if="!isFormVisible && savedEntries.length" class="mt-6">
+                        <h2 class="text-2xl">History:</h2>
+                        <ul>
+                            <li v-for="(entry, index) in savedEntries" :key="index">
+                                <a href="#" @click.prevent="editEntry(index)" class="entry-link">
+                                    <strong>{{ entry.title }}</strong> - {{ entry.created_at }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-    </Fluid>
+        </Fluid>
+    </div>
 </template>
 
 <style scoped>
+.app {
+    background-image: url('/src/assets/JournalEntry.jpg');
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column; /* Arrange children vertically */
+    justify-content: flex-start; /* Align at the top */
+    align-items: stretch;
+    min-height: 85.5vh; /* Ensure it covers the full height of the page */
+    padding: 20px; /* Optional: Add some spacing around the content */
+}
+
+.card {
+    color: black;
+    margin-right: 40px;
+    margin-left: 40px;
+    position: relative; /* Or 'absolute' if necessary */
+    bottom: 35px; /* Adjust this value to move the box */
+}
+
 .title-input {
     width: auto; /* Allow the input box to shrink or expand */
     max-width: 400px; /* Max width of the title box */
     min-width: 150px; /* Minimum width of the title box */
     padding: 8px; /* Optional: Adjust padding as needed */
     box-sizing: border-box; /* Ensures padding doesn't affect the total width */
+    margin-bottom: 16px;
 }
 
 .small-button {
@@ -227,19 +283,22 @@ li {
 .entry-link {
     display: block;
     padding: 10px;
-    border: 1px solid #007bff;
+    border: none;
     border-radius: 8px;
-    background-color: #f9f9f9;
-    color: #007bff;
+    background: linear-gradient(0deg, rgba(148, 0, 211, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgb(135, 206, 250) 0%, rgb(148, 0, 211) 100%);
+    color: white;
     text-decoration: none;
+    font-weight: bold; /* Make the text bold for better visibility */
     transition:
         background-color 0.3s ease,
-        transform 0.2s ease;
+        transform 0.2s ease,
+        box-shadow 0.3s ease;
 }
 
 .entry-link:hover {
-    background-color: #e0f7fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
     transform: translateY(-2px);
+    background: linear-gradient(0deg, rgba(148, 0, 211, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgb(148, 0, 211) 0%, rgb(135, 206, 250) 100%);
 }
 
 .entry-link:focus {
