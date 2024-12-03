@@ -11,5 +11,6 @@ export class Goal {
         this.days_per_week = days_per_week;
         this.duration = duration;
         this.duration_unit = duration_unit;
+        
     }
 }

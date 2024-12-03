@@ -3,6 +3,7 @@ import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { register } from '@/services/backend/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { saveTokens } from '@/services/backend/auth';
 
 const username = ref('');
 const email = ref('');
@@ -22,22 +23,25 @@ const handleSignUp = async () => {
     }
 
     try {
-        // Send registration request to the backend
-        await register({
+        // Call the register API
+        const response = await register({
             username: username.value,
             email: email.value,
-            password: password.value
+            password: password.value,
         });
 
-        successMessage.value = 'Registration successful! Redirecting to login...';
+        // Save the returned tokens
+        saveTokens(response.data.access, response.data.refresh);
 
-        // Redirect to the login page after successful registration
+        successMessage.value = "Sign-Up successful! Redirecting...";
+
+        // Redirect to the dashboard or welcome page
         setTimeout(() => {
-            router.push('/auth/login');
+            router.push('/welcome');
         }, 2000);
     } catch (error) {
-        // Display an error message if registration fails
-        errorMessage.value = error.response?.data?.error || 'Registration failed. Please try again.';
+        const backendError = error.response?.data?.error;
+        errorMessage.value = backendError || 'Registration failed. Please try again.';
         console.error('Registration error:', error);
     }
 };

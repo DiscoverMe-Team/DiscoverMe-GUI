@@ -132,7 +132,11 @@ const router = createRouter({
             name: 'home',
             component: () => import('@/views/pages/Landing.vue')
         },
-
+        {
+            path: '/welcome',
+            name: 'welcome',
+            component: () => import('@/views/pages/auth/Welcome.vue')
+        },
         {
             path: '/pages/notfound',
             name: 'notfound',

@@ -83,9 +83,11 @@
         <div v-if="completedGoals.length > 0" class="completed-goals">
           <div v-for="goal in completedGoals" :key="goal.id" class="completed-goal">
             <p>
-              <strong>{{ goal.title }}</strong> - Completed on {{ goal.completed_at }}
+              <strong>{{ goal.title }}</strong> - Completed on {{ goal.timestamp }}
             </p>
           </div>
+          <button class="right-delete-button" @click="deleteCompletedGoal(index)">Delete</button>
+          <div class="action-gap1"></div>
         </div>
         <p v-else>No completed goals yet!</p>
       </div>

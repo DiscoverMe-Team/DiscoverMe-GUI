@@ -3,15 +3,29 @@ import { User } from '@/models/User';
 import { Mood } from '@/models/Mood';
 import { MoodLog } from '@/models/MoodLog';
 import { getUserInfo } from '@/services/backend/UserService';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { getMoods, getMoodById } from '@/services/backend/MoodService';
 import { getMoodLogs } from '@/services/backend/MoodLogService';
+
 const user = ref(new User());
 const moods = ref([]);
 const moodLogs = ref([]);
 const showSetMoodDialog = ref(false);
 const currentMood = ref(null); 
 const currentEmoji = ref(null); 
+
+// Capitalization utility
+const capitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
+// Computed full name with capitalization
+const fullName = computed(() => {
+    return `${capitalize(user.value.first_name)} ${capitalize(user.value.last_name)}`;
+});
+
+
 async function fetchUserInfo() {
     try {
         const fetchedUser = await getUserInfo();
@@ -88,7 +102,7 @@ onMounted(() => {
 <template>
  <div class="profile">
                 <img src="@/assets/umgc-logo.png" alt="profile_picture">
-                <h3 class="layout-menuitem-text">{{ user.first_name}} {{ user.last_name}} </h3>
+                <h3 class="layout-menuitem-text">{{ fullName }}</h3>
                 <div class="status-bar" @click="showSetMoodDialog = true">
                     <p v-if="currentMood">{{ currentMood }} {{ currentEmoji }}</p>
                     <p v-else>No mood data available</p>

@@ -100,7 +100,7 @@ function smoothScroll(id) {
                                     style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-book !text-2xl text-yellow-700"></i>
                                 </div>
-                                <h5 class="mb-2 text-surface-900 dark:text-surface-0">Journaling</h5>
+                                <h5 class="mb-2 text-surface-900 dark:text-surface-0 font-semibold">Journaling</h5>
                                 <span class="text-surface-600 dark:text-surface-200">A safe space for all of your
                                     thoughts.</span>
                             </div>
@@ -115,7 +115,7 @@ function smoothScroll(id) {
                                     style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-heart !text-2xl text-cyan-700"></i>
                                 </div>
-                                <h5 class="mb-2 text-surface-900 dark:text-surface-0">Mood Settings</h5>
+                                <h5 class="mb-2 text-surface-900 dark:text-surface-0 font-semibold ">Mood Setting</h5>
                                 <span class="text-surface-600 dark:text-surface-200">Record how you are feeling.</span>
                             </div>
                         </div>
@@ -129,7 +129,7 @@ function smoothScroll(id) {
                                     style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-check-circle !text-2xl text-indigo-700"></i>
                                 </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Goal
+                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 font-semibold">Goal
                                     Setting</div>
                                 <span class="text-surface-600 dark:text-surface-200">Set goals to achieve.</span>
                             </div>

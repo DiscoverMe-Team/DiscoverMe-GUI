@@ -80,6 +80,7 @@ export default {
         const deleteEntry = async () => {
             if (editingEntry.value !== null) {
                 try {
+                    
                     // Remove the entry from the backend
                     await deleteJournalEntry(editingEntry.value.id);
 
@@ -177,9 +178,10 @@ export default {
                     </div>
 
                     <!-- Conditionally Render the Form or the Saved Entries List -->
-                    <div v-if="isFormVisible" class="mt-6">
+                    <div v-if="isFormVisible" class="">
                         <!-- Journal Entry Form -->
-                        <h2 class="text-2xl mb-4">Create New Entry</h2>
+                        <h2 v-if="!editingEntry" text-2xl mb-4 style="font-size: large;">Create New Entry</h2>
+                        <h2 v-if="editingEntry" text-2xl mb-4 style="font-size: large;">Edit Entry</h2>
 
                         <div class="flex flex-col gap-2">
                             <label for="title">Title</label>
@@ -193,7 +195,7 @@ export default {
 
                         <div class="flex gap-4 mt-4">
                             <Button label="Save" icon="pi pi-check" class="small-button" @click="saveEntry" />
-                            <Button label="Delete" icon="pi pi-trash" class="small-button" @click="deleteEntry" />
+                            <Button v-if="editingEntry" label="Delete" icon="pi pi-trash" class="small-button" @click="deleteEntry" />
                             <Button label="Cancel" icon="pi pi-times" class="small-button" @click="cancelEntry" />
                         </div>
                     </div>
@@ -209,7 +211,7 @@ export default {
 
                     <!-- Display saved journal entries by default -->
                     <div v-if="!isFormVisible && savedEntries.length" class="mt-6">
-                        <h2 class="text-2xl">History:</h2>
+                        <h2 class="text-2xl">Current Entries:</h2>
                         <ul>
                             <li v-for="(entry, index) in savedEntries" :key="index">
                                 <a href="#" @click.prevent="editEntry(index)" class="entry-link">

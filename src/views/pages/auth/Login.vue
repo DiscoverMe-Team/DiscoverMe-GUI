@@ -69,7 +69,7 @@ const handleLogin = async () => {
                             class="h-20 w-auto mb-4"
                             style="max-width: 70px;"
                         />
-                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Start your Journey!</div>
+                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Continue your Journey!</div>
                         <span class="text-muted-color font-medium">Sign in to continue</span>
                     </div>
 
