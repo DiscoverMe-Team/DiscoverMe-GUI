@@ -1,7 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted } from 'vue';
-
 const { setPrimary } = useLayout();
 
 onMounted(() => {

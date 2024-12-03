@@ -4,9 +4,9 @@ import { Suggestion } from '@/models/Suggestion';
 const mapToSuggestion = (data) => new Suggestion(data.id, data.mood_trigger, data.suggestion_text);
 
 export const getSuggestions = async () => {
-    const response = await api.get('/suggestions/');
-    return response.data.map(mapToSuggestion);
-};
+    const response = await axios.get('/api/suggestions/');
+    return response.data;
+ };
 
 export const getSuggestionById = async (id) => {
     const response = await api.get(`/suggestions/${id}/`);

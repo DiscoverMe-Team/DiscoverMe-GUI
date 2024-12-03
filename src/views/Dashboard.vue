@@ -7,6 +7,7 @@
  * - Showing a greeting with a brief suggestion/affirmation
  * - Displaying the latest journal entry, active goals, and daily affirmation
  * - Fetching weather information for the user
+ * - Fetching suggestions for user improvement
  */
 
 import { ref, computed, onMounted } from 'vue';
@@ -18,6 +19,7 @@ import { getInsights } from '@/services/backend/InsightService';
 import { fetchWeather } from '@/services/external/weatherService';
 import { useUser } from '@/layout/composables/useUser';
 import { getRandomAffirmation } from '@/services/backend/affirmations';
+import { getSuggestions } from '@/services/backend/SuggestionService';
 
 // Reactive data variables
 const moods = ref([]);
@@ -35,6 +37,9 @@ const { user, fetchUserInfo } = useUser();
 const greeting = ref('');
 const suggestion = ref('');
 const showGreeting = ref(true);
+const suggestions = ref([]);
+const suggestionsError = ref('');
+const loadingSuggestions = ref(false);
 
 // Mapping for weather icons
 const weatherIcons = {
@@ -53,6 +58,22 @@ const weatherIcons = {
 const capitalize = (str) => {
     if (!str) return 'Guest';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
+/**
+ * Fetches suggestions for the user and updates the state.
+ */
+const fetchSuggestions = async () => {
+    loadingSuggestions.value = true;
+    suggestionsError.value = '';
+    try {
+        suggestions.value = await getSuggestions();
+    } catch (error) {
+        
+        console.error('Suggestions Fetch Error:', error);
+    } finally {
+        loadingSuggestions.value = false;
+    }
 };
 
 /**
@@ -96,7 +117,7 @@ const getDailyAffirmation = () => {
 };
 
 /**
- * Fetches and updates the dashboard data, including moods, journal entries, goals, and insights.
+ * Fetches and updates the dashboard data, including moods, journal entries, goals, insights, and suggestions.
  */
 async function fetchDashboardData() {
     try {
@@ -141,6 +162,7 @@ onMounted(async () => {
     try {
         await fetchDashboardData();
         await fetchUserInfo();
+        await fetchSuggestions(); // Fetch suggestions
 
         if (!user.value?.city || !user.value?.state) {
             weatherError.value = 'City and state are required for weather information.';
@@ -164,6 +186,7 @@ onMounted(async () => {
 });
 </script>
 
+
 <template>
     <div class="row">
         <div class="dashboard-header flex justify-between items-center mb-6">
@@ -185,12 +208,37 @@ onMounted(async () => {
                 <div v-if="weatherError" class="text-red-500">{{ weatherError }}</div>
             </div>
         </div>
+
         <div class="card bg-blue-100 text-blue-900 p-4 rounded shadow-md">
-            <h2 class="text-lg mb-2"><i>Daily Affirmation</i></h2>
-            <p class="text-base">{{ dailyAffirmation }}</p>
+            <h2 class="text-lg mb-2"><i>Suggestions for You</i></h2>
+            <!-- Loading Indicator -->
+            <div v-if="loadingSuggestions" class="loading-spinner">
+                <i class="pi pi-spin pi-spinner"></i> Loading suggestions...
+            </div>
+
+            <!-- Error Message -->
+            <div v-if="suggestionsError" class="error-message">
+                {{ suggestionsError }}
+            </div>
+
+            <!-- Suggestions List -->
+            <ul v-if="!loadingSuggestions && suggestions.length > 0">
+                <li v-for="(suggestion, index) in suggestions" :key="index" class="suggestion-item">
+                    {{ suggestion.suggestionText }}
+                    <button @click="dismissSuggestion(index)" class="dismiss-button">
+                        <i class="pi pi-times"></i>
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Empty State -->
+            <div v-if="!loadingSuggestions && suggestions.length === 0" class="empty-state">
+                No suggestions available at the moment. Check back later!
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-2  gap-8">
             <!-- Recent Journal Entries -->
             <div class="dashboard-card">
                 <div class="dashboard-card-header">
@@ -221,13 +269,16 @@ onMounted(async () => {
                 </div>
                 <div class="dashboard-card-body">
                     <div v-if="goals.filter((goal) => !goal.completed).length === 0">
-                        No active goals yet. <router-link to="/goals">Set a new goal</router-link> and start your journey!
+                        No active goals yet. <router-link to="/goals">Set a new goal</router-link> and start your
+                        journey!
                     </div>
                     <ul v-else>
-                        <li v-for="goal in goals.filter((goal) => !goal.completed)" :key="goal.id">{{ goal.title }} - {{ goal.description }}</li>
+                        <li v-for="goal in goals.filter((goal) => !goal.completed)" :key="goal.id">{{ goal.title }} - {{
+                            goal.description }}</li>
                     </ul>
                 </div>
             </div>
+            
         </div>
     </div>
 </template>
@@ -238,6 +289,7 @@ onMounted(async () => {
     margin-bottom: 1.5rem;
     font-family: 'Arial, sans-serif';
 }
+
 .fade-transition {
     transition: opacity 0.5s ease-in-out;
 }

@@ -48,7 +48,7 @@ const handleCompleteSignUp = async () => {
 
         successMessage.value = 'Registration complete! Redirecting to dashboard...';
         setTimeout(() => {
-            router.push('/dashboard');
+            router.push('/');
         }, 2000);
     } catch (error) {
         console.error('Update user details error:', error);

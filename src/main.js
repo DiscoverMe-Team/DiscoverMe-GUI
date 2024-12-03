@@ -6,12 +6,13 @@ import Lara from '@primevue/themes/lara';
 import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
+import { createPinia } from 'pinia';
 
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
 
 const app = createApp(App);
-
+const pinia = createPinia();
 app.use(router);
 const MyPreset = definePreset(Lara, {
     semantic: {
@@ -42,4 +43,6 @@ app.use(PrimeVue, {
 app.use(ToastService);
 app.use(ConfirmationService);
 
+
+app.use(pinia); // Register Pinia
 app.mount('#app');
