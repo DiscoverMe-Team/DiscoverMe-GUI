@@ -79,7 +79,7 @@ function smoothScroll(id) {
                 <div
                     class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
                     <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal text-center">
-                        DiscoverMe is a web-based Mood & Mental Health Tracker designed to help society log their moods,
+                        DiscoverMe is a web-based Mood & Mental Health Tracker designed to help people log their moods,
                         track emotional trends, and receive personalized recommendations for mental well-being.
                     </div>
                 </div>
