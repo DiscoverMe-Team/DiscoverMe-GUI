@@ -8,11 +8,15 @@ const api = axios.create({
     },
 });
 
-// Attach the JWT access token to every request
 api.interceptors.request.use(
     (config) => {
         const token = getAccessToken();
-        if (token) {
+
+        // Exclude `Authorization` header for certain endpoints
+        const excludedEndpoints = ['/register/'];
+        const isExcluded = excludedEndpoints.some((endpoint) => config.url.includes(endpoint));
+
+        if (token && !isExcluded) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config;

@@ -104,7 +104,7 @@ const handleLogin = async () => {
 
 
 .login-container {
-    background: white; /* Add a light background for the form */
+    background: white; 
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     padding: 2rem;

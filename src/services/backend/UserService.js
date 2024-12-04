@@ -46,3 +46,14 @@ export const updateUserInfo = async (user) => {
         throw error;
     }
 };
+
+export const isFirstLogin = async () => {
+    try {
+        const response = await api.get('/user-info/'); // Adjust the endpoint as necessary
+        const user = response.data;
+        return !user?.first_name; // First login if first_name is blank or undefined
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        return false; // Default to false in case of an error
+    }
+};

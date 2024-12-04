@@ -80,7 +80,7 @@ export default {
         const deleteEntry = async () => {
             if (editingEntry.value !== null) {
                 try {
-                    
+
                     // Remove the entry from the backend
                     await deleteJournalEntry(editingEntry.value.id);
 
@@ -172,8 +172,10 @@ export default {
                     <div class="flex justify-between items-center">
                         <h1 class="text-4xl font-bold">Journal Entries</h1>
                         <div class="flex gap-4">
-                            <Button v-if="!isFormVisible" label="Create Entry" icon="pi pi-plus" class="large-button" @click="showForm" />
-                            <Button v-if="isFormVisible" label="Back to Entries" icon="pi pi-arrow-left" class="large-button" @click="goBack" />
+                            <Button v-if="!isFormVisible" label="Create Entry" icon="pi pi-plus" class="large-button"
+                                @click="showForm" />
+                            <Button v-if="isFormVisible" label="Back to Entries" icon="pi pi-arrow-left"
+                                class="large-button" @click="goBack" />
                         </div>
                     </div>
 
@@ -195,7 +197,8 @@ export default {
 
                         <div class="flex gap-4 mt-4">
                             <Button label="Save" icon="pi pi-check" class="small-button" @click="saveEntry" />
-                            <Button v-if="editingEntry" label="Delete" icon="pi pi-trash" class="small-button" @click="deleteEntry" />
+                            <Button v-if="editingEntry" label="Delete" icon="pi pi-trash" class="small-button"
+                                @click="deleteEntry" />
                             <Button label="Cancel" icon="pi pi-times" class="small-button" @click="cancelEntry" />
                         </div>
                     </div>
@@ -234,45 +237,44 @@ export default {
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
-    flex-direction: column; /* Arrange children vertically */
-    justify-content: flex-start; /* Align at the top */
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: stretch;
-    min-height: 85.5vh; /* Ensure it covers the full height of the page */
-    padding: 20px; /* Optional: Add some spacing around the content */
+    min-height: 85.5vh;
+    padding: 20px;
 }
 
 .card {
     color: black;
     margin-right: 40px;
     margin-left: 40px;
-    position: relative; /* Or 'absolute' if necessary */
-    bottom: 35px; /* Adjust this value to move the box */
+    position: relative;
+    bottom: 35px;
 }
 
 .title-input {
-    width: auto; /* Allow the input box to shrink or expand */
-    max-width: 400px; /* Max width of the title box */
-    min-width: 150px; /* Minimum width of the title box */
-    padding: 8px; /* Optional: Adjust padding as needed */
-    box-sizing: border-box; /* Ensures padding doesn't affect the total width */
+    width: auto;
+    max-width: 400px;
+    min-width: 150px;
+    padding: 8px;
+    box-sizing: border-box;
     margin-bottom: 16px;
 }
 
 .small-button {
-    padding: 6px 12px; /* Smaller padding */
-    font-size: 14px; /* Smaller text size */
-    min-width: 80px; /* Set a smaller minimum width for buttons */
-    max-width: 120px; /* Set a maximum width for buttons */
+    padding: 6px 12px;
+    font-size: 14px;
+    min-width: 80px;
+    max-width: 120px;
 }
 
 .large-button {
-    padding: 8px 12px; /* Smaller padding */
-    font-size: 14px; /* Smaller text size */
-    min-width: 150px; /* Set a smaller minimum width for buttons */
-    max-width: 180px; /* Set a maximum width for buttons */
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 150px;
+    max-width: 180px;
 }
 
-/* Styling for the clickable entries */
 ul {
     list-style-type: none;
     padding-left: 0;
@@ -290,7 +292,7 @@ li {
     background: linear-gradient(0deg, rgba(148, 0, 211, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgb(135, 206, 250) 0%, rgb(148, 0, 211) 100%);
     color: white;
     text-decoration: none;
-    font-weight: bold; /* Make the text bold for better visibility */
+    font-weight: bold;
     transition:
         background-color 0.3s ease,
         transform 0.2s ease,
@@ -298,7 +300,7 @@ li {
 }
 
 .entry-link:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
     background: linear-gradient(0deg, rgba(148, 0, 211, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgb(148, 0, 211) 0%, rgb(135, 206, 250) 100%);
 }

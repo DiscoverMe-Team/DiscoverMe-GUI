@@ -97,7 +97,6 @@ const savePreferences = () => {
 </template>
 
 <style scoped>
-/* Toggle Switch */
 .switch {
     position: relative;
     display: inline-block;

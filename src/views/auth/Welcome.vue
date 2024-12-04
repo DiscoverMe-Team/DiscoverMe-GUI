@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { updateUserDetails } from '@/services/backend/api';
-import { states } from '@/models/States'; 
+import { states } from '@/models/States'; // Import states for dropdown
 
 const stage = ref(1);
 const firstName = ref('');
@@ -16,33 +16,38 @@ const errorMessage = ref('');
 const router = useRouter();
 
 const handleNextStage = () => {
-    if (!isStageValid()) return;
+    if (!isStageValid()) return; // Validate the current stage
     if (stage.value === 1) stage.value = 2;
     else if (stage.value === 2) stage.value = 3;
-    else handleCompleteSignUp();
 };
 
 const isStageValid = () => {
-    if (stage.value === 2 && (!firstName.value || !lastName.value)) {
-        errorMessage.value = 'Please provide your first and last name.';
-        return false;
+    if (stage.value === 2) {
+        if (!firstName.value.trim() || !lastName.value.trim()) {
+            errorMessage.value = 'First and last name are required.';
+            return false;
+        }
     }
-    if (stage.value === 3 && (!city.value || !state.value || !occupation.value || !pronouns.value)) {
-        errorMessage.value = 'Please fill in all fields.';
-        return false;
+    if (stage.value === 3) {
+        if (!city.value.trim() || !state.value || !occupation.value.trim() || !pronouns.value) {
+            errorMessage.value = 'Please fill in all the required fields.';
+            return false;
+        }
     }
     errorMessage.value = '';
     return true;
 };
 
 const handleCompleteSignUp = async () => {
+    if (!isStageValid()) return; // Validate the final stage
+
     try {
         await updateUserDetails({
-            first_name: firstName.value,
-            last_name: lastName.value,
-            city: city.value,
+            first_name: firstName.value.trim(),
+            last_name: lastName.value.trim(),
+            city: city.value.trim(),
             state: state.value,
-            occupation: occupation.value,
+            occupation: occupation.value.trim(),
             pronouns: pronouns.value,
         });
 
@@ -51,8 +56,8 @@ const handleCompleteSignUp = async () => {
             router.push('/');
         }, 2000);
     } catch (error) {
-        console.error('Update user details error:', error);
-        errorMessage.value = 'An error occurred while updating your details. Please try again.';
+        console.error('Error updating user details:', error);
+        errorMessage.value = 'An error occurred while completing registration. Please try again.';
     }
 };
 </script>
@@ -60,16 +65,16 @@ const handleCompleteSignUp = async () => {
 <template>
     <div class="bg-gradient min-h-screen flex items-center justify-center bg-gray-100">
         <div class="text-center">
-            <!-- Greeting -->
+            <!-- Greeting Stage -->
             <div v-if="stage === 1" class="animate-fade-in">
                 <h1 class="text-4xl font-bold mb-6 text-white">Hello, friend!</h1>
                 <p class="text-lg text-white">We’re excited to have you on board.</p>
-                <Button @click="handleNextStage" class="mt-6 bg-blue-500 text-white px-6 py-2 rounded">
+                <button @click="handleNextStage" class="mt-6 bg-blue-500 text-white px-6 py-2 rounded">
                     Next
-                </Button>
+                </button>
             </div>
 
-            <!-- Name Input -->
+            <!-- Name Input Stage -->
             <div v-else-if="stage === 2" class="animate-fade-in">
                 <h1 class="text-2xl font-bold mb-6 text-white">Tell us your name</h1>
                 <input
@@ -84,12 +89,12 @@ const handleCompleteSignUp = async () => {
                     placeholder="Last Name"
                     class="block w-full px-4 py-2 mb-4 border rounded"
                 />
-                <Button @click="handleNextStage" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded">
+                <button @click="handleNextStage" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded">
                     Next
-                </Button>
+                </button>
             </div>
 
-            <!-- Final Details -->
+            <!-- Final Details Stage -->
             <div v-else-if="stage === 3" class="animate-fade-in">
                 <h1 class="text-2xl font-bold mb-6 text-white">A few more details</h1>
                 <input
@@ -117,14 +122,14 @@ const handleCompleteSignUp = async () => {
                     <option value="they/them">They/Them</option>
                     <option value="prefer not to say">Prefer not to say</option>
                 </select>
-                <Button @click="handleCompleteSignUp" class="mt-4 bg-green-500 text-white px-6 py-2 rounded">
+                <button @click="handleCompleteSignUp" class="mt-4 bg-green-500 text-white px-6 py-2 rounded">
                     Complete Signup
-                </Button>
+                </button>
             </div>
 
-            <!-- Success Message -->
-            <p v-if="successMessage" class="mt-6 text-green-500">{{ successMessage }}</p>
-            <p v-if="errorMessage" class="mt-6 text-red-500">{{ errorMessage }}</p>
+            <!-- Error and Success Messages -->
+            <p v-if="errorMessage" class="text-red-500 mt-6">{{ errorMessage }}</p>
+            <p v-if="successMessage" class="text-green-500 mt-6">{{ successMessage }}</p>
         </div>
     </div>
 </template>
@@ -142,4 +147,5 @@ const handleCompleteSignUp = async () => {
 .animate-fade-in {
     animation: fade-in 1.5s ease-in-out;
 }
+
 </style>

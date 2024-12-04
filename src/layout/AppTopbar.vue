@@ -130,8 +130,7 @@ function logout() {
 
 @media (max-width: 640px) {
     .layout-topbar-date {
-        display: none; /* Hide date on smaller screens */
-    }
+        display: none;     }
 
 }
 </style>

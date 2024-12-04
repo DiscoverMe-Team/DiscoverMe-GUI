@@ -19,18 +19,9 @@
         <div v-if="goals.length > 0" class="goals">
           <div v-for="goal in goals" :key="goal.id" class="goal">
             <div class="goal-header">
-              <input
-                class="my-checkbox"
-                type="checkbox"
-                v-model="goal.completed"
-                @change="updateGoal(goal.id, { completed: goal.completed })"
-              />
-              <input
-                type="text"
-                v-model="goal.title"
-                class="goal-title"
-                :disabled="!goal.editing"
-              />
+              <input class="my-checkbox" type="checkbox" v-model="goal.completed"
+                @change="updateGoal(goal.id, { completed: goal.completed })" />
+              <input type="text" v-model="goal.title" class="goal-title" :disabled="!goal.editing" />
               <button class="small-button" @click="toggleGoalEdit(goal)">
                 {{ goal.editing ? "Save" : "Edit" }}
               </button>
@@ -42,18 +33,9 @@
             <!-- Task List -->
             <div class="task-list">
               <div v-for="task in goal.tasks" :key="task.id" class="task-item">
-                <input
-                  class="my-checkbox"
-                  type="checkbox"
-                  v-model="task.completed"
-                  @change="updateTask(task.id, { completed: task.completed })"
-                />
-                <input
-                  type="text"
-                  v-model="task.text"
-                  class="task-input"
-                  :disabled="!task.editing"
-                />
+                <input class="my-checkbox" type="checkbox" v-model="task.completed"
+                  @change="updateTask(task.id, { completed: task.completed })" />
+                <input type="text" v-model="task.text" class="task-input" :disabled="!task.editing" />
                 <button class="smaller-button" @click="toggleTaskEdit(task)">
                   {{ task.editing ? "Save" : "Edit" }}
                 </button>
@@ -62,11 +44,7 @@
                 </button>
               </div>
               <div class="add-task-item">
-                <input
-                  type="text"
-                  v-model="goal.newTask"
-                  placeholder="Add a task for this goal"
-                />
+                <input type="text" v-model="goal.newTask" placeholder="Add a task for this goal" />
                 <button class="task-button" @click="addTask(goal.id, goal.newTask)">
                   Add Task
                 </button>
@@ -86,7 +64,7 @@
               <strong>{{ goal.title }}</strong> - Completed on {{ goal.timestamp }}
             </p>
           </div>
-          <button class="right-delete-button" @click="deleteCompletedGoal(index)">Delete</button>
+          <button class="right-delete-button" @click="deleteCompletedGoals">Delete</button>
           <div class="action-gap1"></div>
         </div>
         <p v-else>No completed goals yet!</p>
@@ -140,7 +118,6 @@ export default {
         return;
       }
       try {
-        alert(this.newGoal)
         const goal = await createGoal({ title: this.newGoal, description: "" });
         goal.tasks = [];
         goal.newTask = "";
@@ -194,6 +171,16 @@ export default {
         console.error("Error deleting task:", error);
       }
     },
+    async deleteCompletedGoals() {
+      try {
+        for (const goal of this.completedGoals) {
+          await deleteGoal(goal.id);
+        }
+        this.completedGoals = [];
+      } catch (error) {
+        console.error("Error deleting completed goals:", error);
+      }
+    },
     toggleGoalEdit(goal) {
       if (goal.editing) {
         this.updateGoal(goal.id, { title: goal.title });
@@ -215,44 +202,41 @@ export default {
 
 
 <style scoped>
-.my-checkbox{
+.my-checkbox {
   margin-right: 5px;
 }
 
-.goal-title{
+.goal-title {
   color: black;
   background-color: white;
 }
 
-.task-input{
+.task-input {
   color: black;
   background-color: white;
 }
 
-.goal-separator{
+.goal-separator {
   color: rgb(2, 142, 160);
 }
 
-.add-goal-container{
+.add-goal-container {
   color: black;
   border-radius: 10px;
 }
 
-.add-task-item{
-  color:black;
+.add-task-item {
+  color: black;
   margin-left: 50px;
 }
 
-.task-list{
+.task-list {
   margin-left: 50px;
 }
 
 h1 {
-  /*This handles the "Goal Checklist" title.*/
   font-family: 'Montserrat', sans-serif;
-  font-size: 2rem !important
-    /* Using !important ensures this occurs despite all other css that exists */
-  ;
+  font-size: 2rem !important;
   Line-height: 1.5;
   color: rgb(179, 6, 179) !important;
   -webkit-text-stroke: .5px white;
@@ -265,11 +249,13 @@ h1 {
   font-family: Arial, sans-serif;
   padding: 20px;
 }
+
 .columns {
   display: flex;
   justify-content: space-between;
   gap: 20px;
 }
+
 .left-column,
 .right-column {
   flex: 1;
@@ -279,44 +265,38 @@ h1 {
   border-radius: 10px;
   max-width: 45%;
 }
+
 .completed-goals .completed-goal {
   margin-bottom: 10px;
   background-size: auto;
   border: white;
 }
+
 .completed-tasks {
   border: white;
   background-size: auto;
   margin-left: 20px;
 }
 
-.goal-button{
+.goal-button {
   background-color: #8b5cf6;
   color: white;
   padding: 1px 15px;
-  /* Smaller padding */
   font-size: 14px;
-  /* Smaller text size */
   min-width: 80px;
-  /* Set a smaller minimum width for buttons */
   max-width: 120px;
-  /* Set a maximum width for buttons */
   border: none !important;
   border-radius: 8px;
   margin-left: 50px;
 }
 
-.delete-goal-button{
+.delete-goal-button {
   background-color: #8b5cf6;
   color: white;
   padding: 1px 15px;
-  /* Smaller padding */
   font-size: 14px;
-  /* Smaller text size */
   min-width: 80px;
-  /* Set a smaller minimum width for buttons */
   max-width: 120px;
-  /* Set a maximum width for buttons */
   border: none !important;
   border-radius: 8px;
   margin-left: 220px;
@@ -328,33 +308,25 @@ h1 {
   border: none !important;
 }
 
-.task-button{
+.task-button {
   background-color: #8b5cf6;
   color: white;
   padding: 1px 15px;
-  /* Smaller padding */
   font-size: 14px;
-  /* Smaller text size */
   min-width: 50px;
-  /* Set a smaller minimum width for buttons */
   max-width: 90px;
-  /* Set a maximum width for buttons */
   border: none !important;
   border-radius: 8px;
   margin-left: 50px;
 }
 
-.delete-task-button{
+.delete-task-button {
   background-color: #8b5cf6;
   color: white;
   padding: 1px 15px;
-  /* Smaller padding */
   font-size: 14px;
-  /* Smaller text size */
   min-width: 80px;
-  /* Set a smaller minimum width for buttons */
   max-width: 120px;
-  /* Set a maximum width for buttons */
   border: none !important;
   border-radius: 8px;
   margin-left: 220px;
@@ -370,13 +342,9 @@ h1 {
   background-color: #8b5cf6;
   color: white;
   padding: 1px 15px;
-  /* Smaller padding */
   font-size: 14px;
-  /* Smaller text size */
   min-width: 80px;
-  /* Set a smaller minimum width for buttons */
   max-width: 120px;
-  /* Set a maximum width for buttons */
   border: none !important;
   border-radius: 8px;
   margin-left: 32px;
@@ -391,13 +359,9 @@ h1 {
   background-color: #8b5cf6;
   color: white;
   padding: 1px 15px !important;
-  /* Smaller padding */
   font-size: 14px;
-  /* Smaller text size */
   min-width: 80px;
-  /* Set a smaller minimum width for buttons */
   max-width: 120px;
-  /* Set a maximum width for buttons */
   border: none !important;
   border-radius: 8px;
   margin-left: 32px;
@@ -408,28 +372,23 @@ h1 {
   border: none !important;
 }
 
-.right-delete-button{
+.right-delete-button {
   background-color: #8b5cf6;
   color: white;
   padding: 1px 15px;
-  /* Smaller padding */
   font-size: 14px;
-  /* Smaller text size */
   min-width: 50px;
-  /* Set a smaller minimum width for buttons */
   max-width: 90px;
-  /* Set a maximum width for buttons */
   border: none !important;
   border-radius: 8px;
 }
 
-.right-delete-button:hover{
+.right-delete-button:hover {
   background-color: #611efd !important;
   border: none !important;
 }
 
 
-/* Warning Message */
 .warning-message {
   color: red;
   font-size: 14px;
@@ -444,5 +403,4 @@ h1 {
 .action-gap2 {
   height: 20px;
 }
-
 </style>

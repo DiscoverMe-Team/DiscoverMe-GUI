@@ -1,4 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
 @import '@/assets/layout/layout.scss';
 @import 'primeicons/primeicons.css';
 
@@ -13,8 +12,7 @@
 }
 
 body {
-    background: linear-gradient(to bottom, #8e44ad, #3498db); /* Adjust gradient colors */
-    color: var(--text-color);
+    background: linear-gradient(to bottom, #8e44ad, #3498db);     color: var(--text-color);
     
 }
 .card {
@@ -28,10 +26,7 @@ body {
 }
 
 .bg-gradient {
-    background: linear-gradient(to bottom, #8e44ad, #3498db); /* Adjust gradient colors */
-    height: 100vh; /* Full viewport height */
-    width: 100vw; /* Full viewport width */
-    display: flex;
+    background: linear-gradient(to bottom, #8e44ad, #3498db);     height: 100vh;     width: 100vw;     display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -41,37 +36,24 @@ body {
 }
 
 .dashboard-card {
-    background-color: var(--card, #ffffff); /* Keep your current background color */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
-    overflow: hidden; /* Ensures content stays within the rounded borders */
-    display: flex;
+    background-color: var(--card, #ffffff);     border-radius: 10px;     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);     overflow: hidden;     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effect */
-}
+    transition: transform 0.2s ease, box-shadow 0.2s ease; }
 
 .dashboard-card:hover {
-    transform: translateY(-5px); /* Subtle lift on hover */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-}
+    transform: translateY(-5px);     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); }
 
-/* Dashboard Card Header */
 .dashboard-card-header {
-    background-color: var(--primary-color, #8A2BE2); /* Use your theme’s primary color */
-    color: #ffffff; /* White text for contrast */
-    font-size: 1rem;
+    background-color: var(--primary-color, #8A2BE2);     color: #ffffff;     font-size: 1rem;
     font-weight: bold;
     padding: 0.75rem 1rem;
     text-align: center;
-    text-transform: uppercase; /* Add emphasis with uppercase letters */
-}
+    text-transform: uppercase; }
 
-/* Dashboard Card Body */
 .dashboard-card-body {
     padding: 1rem;
-    color: var(--text-color, #333333); /* Use your existing text color */
-    font-size: 0.9rem;
+    color: var(--text-color, #333333);     font-size: 0.9rem;
 }
 
 .dashboard-card-body p {
@@ -86,46 +68,34 @@ body {
 
 .dashboard-card-body .icon {
     font-size: 2.5rem;
-    color: var(--primary-color-light, #A779E9); /* Light shade for icons */
-    margin-bottom: 1rem;
+    color: var(--primary-color-light, #A779E9);     margin-bottom: 1rem;
 }
-/* Add icon styling */
 .dashboard-card-header .add-icon {
     font-size: 1.25rem;
     color: greenyellow;
-    opacity: 0; /* Hidden by default */
-    cursor: pointer;
+    opacity: 0;     cursor: pointer;
     float: right;
-    transition: opacity 0.2s ease-in-out; /* Smooth fade-in effect */
-}
+    transition: opacity 0.2s ease-in-out; }
 
-/* Show the icon on hover */
 .dashboard-card:hover .add-icon {
-    opacity: 1; /* Fully visible on hover */
-}
+    opacity: 1; }
 .greeting{
     color: var(--text-color-secondary, #A779E9);
 }
 
 .dashboard-header {
     display: flex;
-    justify-content: space-between; /* Push greeting and weather to opposite sides */
-    align-items: center; /* Vertically align items */
-}
+    justify-content: space-between;     align-items: center; }
 
 .weather-info {
     background: none;
-    padding: 1rem; /* Add padding */
-    border-radius: 10px; /* Rounded corners */
-    display: flex;
+    padding: 1rem;     border-radius: 10px;     display: flex;
     align-items: center;
-    gap: 1rem; /* Space between icon and details */
-}
+    gap: 1rem; }
 
 .weather-info .icon {
     font-size: 2rem;
-    color: #eeeeee; /* Match your theme color for the icon */
-}
+    color: #eeeeee; }
 
 .weather-details .temperature {
     font-size: 1.25rem;
@@ -135,22 +105,24 @@ body {
 
 .weather-details .location {
     font-size: 0.875rem;
-    color: #ffffff; /* Neutral color for location text */
-}
+    color: #ffffff; }
 
 .status-bar{
     background-color: var(--primary-color, #8A2BE2);
-    border-radius: 10px; /* Rounded corners */
-    font-weight: bold;
+    border-radius: 10px;     font-weight: bold;
 }
 
 @media (max-width: 768px) {
     .dashboard-header {
-        flex-direction: column; /* Stack items vertically on small screens */
-        gap: 1rem; /* Add space between greeting and weather */
-    }
+        flex-direction: column;         gap: 1rem;     }
 
     .weather-info {
-        justify-content: center; /* Center the weather info */
-    }
+        justify-content: center;     }
+}
+
+.border-red-500 {
+    border: 1px solid #f56565; }
+
+.error-text {
+    color: #f56565;     font-size: 0.875rem;     margin-bottom: 2rem;
 }
