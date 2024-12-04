@@ -36,7 +36,7 @@ const model = ref([
             {
                 label: 'E-mail Preferences',
                 icon: 'pi pi-fw pi-envelope',
-                to: '/pages/crud'
+                to: '/auth/email'
             },
         ]
     },

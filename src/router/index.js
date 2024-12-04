@@ -125,6 +125,11 @@ const router = createRouter({
                     name: 'updateinfo',
                     component: () => import('@/views/pages/auth/UpdateInfo.vue')
                 },
+                {
+                    path: '/auth/email',
+                    name: 'email',
+                    component: () => import('@/views/pages/EmailPreferences.vue')
+                }
             ]
         },
         {
