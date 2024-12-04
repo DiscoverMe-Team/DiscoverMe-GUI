@@ -1,5 +1,4 @@
 <script setup>
-import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { login } from '@/services/backend/api';
 import { saveTokens } from '@/services/backend/auth';
 import { ref, onMounted, onUnmounted } from 'vue';
