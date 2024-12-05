@@ -61,7 +61,7 @@
         <div v-if="completedGoals.length > 0" class="completed-goals">
           <div v-for="goal in completedGoals" :key="goal.id" class="completed-goal">
             <p>
-              <strong>{{ goal.title }}</strong> - Completed on {{ goal.timestamp }}
+              <strong>{{ goal.title }}</strong> - Completed on {{ formatDate(goal.completed_on) }}
             </p>
           </div>
           <button class="right-delete-button" @click="deleteCompletedGoals">Delete</button>
@@ -193,10 +193,20 @@ export default {
       }
       task.editing = !task.editing;
     },
+    formatDate(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      }).format(date);
+    },
   },
   async mounted() {
     await this.fetchGoals();
   },
+
 };
 </script>
 

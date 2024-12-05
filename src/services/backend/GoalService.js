@@ -1,7 +1,21 @@
 import api from './api';
 import { Goal } from '@/models/Goal';
 
-const mapToGoal = (data) => new Goal(data.id, data.user, data.category, data.title, data.description, data.completed, data.start_date, data.times_per_day, data.days_per_week, data.duration, data.duration_unit);
+const mapToGoal = (data) =>
+    new Goal(
+        data.id,
+        data.user,
+        data.category,
+        data.title,
+        data.description,
+        data.completed,
+        data.start_date,
+        data.times_per_day,
+        data.days_per_week,
+        data.duration,
+        data.duration_unit,
+        data.completed_on
+    );
 
 export const getGoals = async () => {
     const response = await api.get('/goals/');
