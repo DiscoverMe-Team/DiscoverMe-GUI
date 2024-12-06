@@ -23,7 +23,6 @@ const router = createRouter({
         { path: '/home', name: 'home', component: () => import('@/views/Landing.vue') },
         { path: '/auth/login', name: 'login', component: () => import('@/views/auth/Login.vue') },
         { path: '/auth/signup', name: 'signup', component: () => import('@/views/auth/SignUp.vue') },
-        { path: '/auth/error', name: 'error', component: () => import('@/views/auth/Error.vue') },
         { path: '/:pathMatch(.*)*', name: 'catchAll', component: () => import('@/views/NotFound.vue') },
     ]
 });

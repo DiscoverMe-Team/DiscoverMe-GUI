@@ -67,7 +67,6 @@ function isOutsideClicked(event) {
                 <router-view></router-view>
             </div>
         </div>
-        <Chatbot></Chatbot>
         <div class="layout-mask animate-fadein"></div>
     </div>
     <Toast />
