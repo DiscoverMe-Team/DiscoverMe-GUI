@@ -100,7 +100,7 @@ const handleCompleteSignUp = async () => {
                 <input
                     v-model="city"
                     type="text"
-                    placeholder="City"
+                    placeholder=" What city do you live in?"
                     class="block w-full px-4 py-2 mb-4 border rounded"
                 />
                 <select v-model="state" class="block w-full px-4 py-2 mb-4 border rounded">

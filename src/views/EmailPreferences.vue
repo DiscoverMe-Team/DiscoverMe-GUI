@@ -1,25 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 
-// State for user preferences
+// State for user preferences (no actual changes or saving logic)
 const emailPreferences = ref({
-    newsletters: true,
-    updates: true,
+    newsletters: false,
+    updates: false,
     moodTrackingReminders: false,
     journalingTips: false,
 });
 
-// Handle preference change
-const updatePreference = (key) => {
-    emailPreferences.value[key] = !emailPreferences.value[key];
-    // Mock API call to save preferences
-    console.log(`Updated ${key}:`, emailPreferences.value[key]);
-};
-
-const savePreferences = () => {
-    // Simulate saving preferences
-    console.log('Preferences saved:', emailPreferences.value);
-    alert('Your preferences have been updated!');
+const togglePreference = (key) => {
+    console.log(`Switch toggled for: ${key}`);
 };
 </script>
 
@@ -28,7 +19,7 @@ const savePreferences = () => {
         <div class="card shadow-lg rounded-lg p-8 w-full max-w-2xl">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Email Preferences</h2>
             <p class="text-gray-600 mb-4">
-                Manage your email preferences. Select the types of emails you'd like to receive from us.
+                Manage your email preferences. These switches are currently not functional.
             </p>
 
             <div class="space-y-4">
@@ -38,8 +29,7 @@ const savePreferences = () => {
                     <label class="switch">
                         <input
                             type="checkbox"
-                            v-model="emailPreferences.newsletters"
-                            @change="updatePreference('newsletters')"
+                            @change="togglePreference('newsletters')"
                         />
                         <span class="slider round"></span>
                     </label>
@@ -51,8 +41,7 @@ const savePreferences = () => {
                     <label class="switch">
                         <input
                             type="checkbox"
-                            v-model="emailPreferences.updates"
-                            @change="updatePreference('updates')"
+                            @change="togglePreference('updates')"
                         />
                         <span class="slider round"></span>
                     </label>
@@ -64,8 +53,7 @@ const savePreferences = () => {
                     <label class="switch">
                         <input
                             type="checkbox"
-                            v-model="emailPreferences.moodTrackingReminders"
-                            @change="updatePreference('moodTrackingReminders')"
+                            @change="togglePreference('moodTrackingReminders')"
                         />
                         <span class="slider round"></span>
                     </label>
@@ -77,8 +65,7 @@ const savePreferences = () => {
                     <label class="switch">
                         <input
                             type="checkbox"
-                            v-model="emailPreferences.journalingTips"
-                            @change="updatePreference('journalingTips')"
+                            @change="togglePreference('journalingTips')"
                         />
                         <span class="slider round"></span>
                     </label>
@@ -86,12 +73,12 @@ const savePreferences = () => {
             </div>
 
             <!-- Save Button -->
-            <button
-                @click="savePreferences"
-                class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+            <Button
+                class="mt-6 text-white px-4 py-2 rounded-lg shadow cursor-not-allowed"
+                
             >
-                Save Preferences
-            </button>
+                Save Preferences 
+            </Button>
         </div>
     </div>
 </template>

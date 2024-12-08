@@ -71,7 +71,6 @@ export const changePassword = (data) => api.post('/auth/change-password/', data)
 // User-related API calls
 export const getUserInfo = () => api.get('/user-info/');
 export const updateUserDetails = (data) => api.put('/auth/update-user/', data);
-
 export const checkEmailAvailability = async (email) => {
     const response = await api.post('/auth/check-email/', { email });
     return response.data.isAvailable; // { isAvailable: true/false }
